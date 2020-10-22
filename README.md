@@ -4,7 +4,7 @@ Navigate, solve, and assist in setting sudokus that escape "[Flatland](https://w
 Inspired by [Cracking the Cryptic](https://www.youtube.com/channel/UCC-UOdK8-mIjxBQm_ot1T-Q), and hope/plan to present to them to solve a puzzle or two
 
 ## Roadmap
-Note: I'm privileged to have a job during this pndemic, so my time is limited. Therefore, progress will be slow, so please bear with me.
+Note: I'm privileged to have a job during this pandemic, so my time is limited. Therefore, progress will be slow, so please bear with me.
 
  - Proof of concept with 4x4x4
  - Manually code solving algorithm from [Sudoku Wiki](https://www.sudokuwiki.org/sudoku.htm)
