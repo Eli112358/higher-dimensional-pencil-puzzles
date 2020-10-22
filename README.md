@@ -1,5 +1,5 @@
 # Higher Dimensional Sudoku
-Navigate, solve, and assist in setting sudokus that escape "Flatland"
+Navigate, solve, and assist in setting sudokus that escape "[Flatland](https://www.wired.com/2014/11/geometry-of-flatland/)"
 
 Inspired by [Cracking the Cryptic](https://www.youtube.com/channel/UCC-UOdK8-mIjxBQm_ot1T-Q), and hope/plan to present to them to solve a puzzle or two
 
