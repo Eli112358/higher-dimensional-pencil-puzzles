@@ -1,6 +1,6 @@
 import unittest
 
-from src import Grid
+from src import Grid, Cell
 
 
 class TestGrid(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestGrid(unittest.TestCase):
         self.assertEqual(self.grid.size, self.l*self.w)
 
     def test_cell(self):
-        self.assertEqual(self.grid.cells[0, 0, 0], None)
+        self.assertIsInstance(self.grid.cells[0, 0, 0], Cell)
 
 
 if __name__ == '__main__':
