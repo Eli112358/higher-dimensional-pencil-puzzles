@@ -18,6 +18,8 @@ class Cell(np.object):
 		self.grid = grid
 		self.given = False
 		self.value = None
+		self.candidates = PencilMarks(self)     # center
+		self.contingencies = PencilMarks(self)  # corner
 
 	def set_given(self, value):
 		self.value = value
@@ -26,3 +28,17 @@ class Cell(np.object):
 	def set_guess(self, value):
 		if not self.given:
 			self.value = value
+
+
+class PencilMarks(list):
+
+	def __init__(self, cell):
+		self.cell = cell
+		super().__init__([False]*(self.cell.grid.size+1))
+
+	def clear(self):
+		for i in range(len(self)):
+			self[i] = False
+
+	def toggle(self, i):
+		self[i] = not self[i]
