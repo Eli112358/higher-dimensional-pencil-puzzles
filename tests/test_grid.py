@@ -1,6 +1,6 @@
 import unittest
 
-from src import Grid, Cell
+from src.grid import Grid, Cell
 
 
 class TestGrid(unittest.TestCase):
