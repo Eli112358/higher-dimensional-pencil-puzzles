@@ -18,7 +18,7 @@ class Cell(np.object):
 		self.grid = grid
 		self.given = False
 		self.value = None
-		self.candidates = PencilMarks(self)     # center
+		self.candidates = PencilMarks(self)  # center
 		self.contingencies = PencilMarks(self)  # corner
 
 	def set_given(self, value):
@@ -34,7 +34,7 @@ class PencilMarks(list):
 
 	def __init__(self, cell):
 		self.cell = cell
-		super().__init__([False]*(self.cell.grid.size+1))
+		super().__init__([False] * (self.cell.grid.size + 1))
 
 	def clear(self):
 		for i in range(len(self)):
