@@ -21,7 +21,8 @@ class TestGrid(unittest.TestCase):
 		self.assertIsInstance(self.grid.cells[0, 0, 0], Cell)
 
 	def test_sub_grid(self):
-		self.assertEqual(self.grid.get_sub_grid(2, 0).cells[0][1], self.grid.cells[0][1][0])
+		self.assertEqual(self.grid.sub_grid([(2, 0), (0, 0)]).cells[1], self.grid.cells[0][1][0])
+		self.assertIsInstance(self.grid.sub_grid([(2, 0), (0, 0), (0, 0), (0, 0)]), Grid)
 
 
 if __name__ == '__main__':

@@ -14,16 +14,20 @@ class Grid:
 			for cell in np.nditer(self.cells, flags=['refs_ok'], op_flags=['readwrite']):
 				cell[...] = Cell(self.cells)
 
-	def get_sub_grid(self, axis, index):
+	def sub_grid(self, index_pairs):
+		if len(index_pairs) == 0 or isinstance(self.cells, Cell):
+			return self
+		axis, index = index_pairs[0]
 		axes = list(range(self.cells.ndim))
 		axes.insert(0, axes.pop(axis))
 		cells = self.cells.transpose(tuple(axes))[index]
+		grid = Grid(self.dimensions - 1, self.region_size, cells)
 		try:
-			return Grid(self.dimensions - 1, self.region_size, cells)
+			return grid.sub_grid(index_pairs[1:])
 		except TypeError:
 			# You've tried to go too far
 			# Warn in the logs later
-			return self
+			return grid
 
 
 class Cell(np.object):
