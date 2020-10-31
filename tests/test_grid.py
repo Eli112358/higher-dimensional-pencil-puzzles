@@ -22,6 +22,8 @@ class TestGrid(unittest.TestCase):
 
 	def test_sub_grid(self):
 		self.assertEqual(self.grid.sub_grid([(2, 0), (0, 0)]).cells[1], self.grid.cells[0][1][0])
+
+	def test_sub_grid_too_far(self):
 		self.assertIsInstance(self.grid.sub_grid([(2, 0), (0, 0), (0, 0), (0, 0)]), Grid)
 
 
