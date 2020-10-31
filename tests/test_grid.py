@@ -1,21 +1,22 @@
 import unittest
 
-from src.grid import Grid, Cell
+from src.grid import Grid, Cell, RegionData
 
 
 class TestGrid(unittest.TestCase):
-	d, l, w = 3, 2, 2
-	grid = Grid(d, {0: l, 1: w})
+	region_data = RegionData()
+	region_data.size = {0: 2, 1: 2}
+	grid = Grid(3, region_data)
 
 	def test_dimensions(self):
-		self.assertEqual(self.grid.dimensions, self.d)
+		self.assertEqual(self.grid.dimensions, 3)
 
 	def test_region_size(self):
-		self.assertEqual(self.grid.region_size[0], self.l)
-		self.assertEqual(self.grid.region_size[1], self.w)
+		self.assertEqual(self.grid.region_data.size[0], 2)
+		self.assertEqual(self.grid.region_data.size[1], 2)
 
 	def test_size(self):
-		self.assertEqual(self.grid.size, self.l*self.w)
+		self.assertEqual(self.grid.size, 4)
 
 	def test_cell(self):
 		self.assertIsInstance(self.grid.cells[0, 0, 0], Cell)

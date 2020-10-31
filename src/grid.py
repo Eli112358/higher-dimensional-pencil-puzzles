@@ -1,16 +1,28 @@
 import numpy as np
 
 
+class RegionData:
+
+	def __init__(self, regular=True):
+		self.regular = regular
+		if self.regular:
+			self.size = {0: 3, 1: 3}
+
+	def load(self, file):
+		# implement later to support irregular sudoku
+		pass
+
+
 class Grid:
 
-	def __init__(self, dimensions, region_size, cells=None):
+	def __init__(self, dimensions=2, region_data=RegionData(), cells=None):
 		self.dimensions = dimensions
-		self.region_size = region_size
-		self.size = self.region_size[0] * self.region_size[1]
+		self.region_data = region_data
+		self.size = self.region_data.size[0] * self.region_data.size[1]
 		if cells is not None:
 			self.cells = cells
 		else:
-			self.cells = np.empty([self.size]*self.dimensions, Cell)
+			self.cells = np.empty([self.size] * self.dimensions, Cell)
 			for cell in np.nditer(self.cells, flags=['refs_ok'], op_flags=['readwrite']):
 				cell[...] = Cell(self.cells)
 
@@ -21,7 +33,7 @@ class Grid:
 		axes = list(range(self.cells.ndim))
 		axes.insert(0, axes.pop(axis))
 		cells = self.cells.transpose(tuple(axes))[index]
-		grid = Grid(self.dimensions - 1, self.region_size, cells)
+		grid = Grid(self.dimensions - 1, self.region_data, cells)
 		try:
 			return grid.sub_grid(index_pairs[1:])
 		except TypeError:
