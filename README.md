@@ -1,5 +1,5 @@
-# Higher Dimensional Sudoku
-Navigate, solve, and assist in setting sudokus that escape "[Flatland](https://www.wired.com/2014/11/geometry-of-flatland/)"
+# Higher Dimensional Pencil Puzzles
+Navigate, solve, and assist in setting pencil puzzles that escape "[Flatland](https://www.wired.com/2014/11/geometry-of-flatland/)"
 
 Inspired by [Cracking the Cryptic](https://www.youtube.com/channel/UCC-UOdK8-mIjxBQm_ot1T-Q), and hope/plan to present to them to solve a puzzle or two
 
@@ -31,12 +31,19 @@ Note: I'm privileged to have a job during this pandemic, so my time is limited. 
    - Add option for coordinate system
      - Letter/Number
      - rYcX
- - Allow others to implement variants; specifically for, but not limited to setting assist eg:
+ - Allow others to implement variants; specifically for, but not limited to setting assist; examples:
    - Chess
-   - Thermo
-   - Sandwich
+   - Killer
    - Non-consecutive
-   - (to name a few)
+   - Sandwich
+   - Thermo
+ - Support other pencil puzzles; examples:
+   - Akari
+   - Fillomino
+   - LITS
+   - Pentominous
+   - Siltherlink
+   - Yajilin
 
 ## Concept
 Imagine 9 (valid, solved) standard sudokus stacked on top of each other. Every plane should itself be a valid, solved 9x9 sudoku.
