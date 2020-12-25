@@ -1,10 +1,21 @@
 from __future__ import annotations
 
-from typing import List, Tuple, Sequence, Union, TYPE_CHECKING
+from typing import (
+	List,
+	Sequence,
+	TYPE_CHECKING,
+	Tuple,
+	Union,
+)
 
 import numpy as np
 import pygame as pg
-from pygame import Color, Surface, SRCALPHA
+from pygame import (
+	Color,
+	RESIZABLE,
+	SRCALPHA,
+	Surface,
+)
 from pygame.font import Font
 
 from tuple_util import formula
@@ -35,13 +46,13 @@ class Rendering:
 class Renderer:
 
 	def __init__(self, grid: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
-		self.grid = grid
-		self.screen = pg.display.set_mode(screen_size)
 		self.dirty = []
+		self.grid = grid
 		self.loaded = False
+		self.screen = None
+		self.size = screen_size
 
 	def load(self):
-		self.screen.fill(Colors.WHITE)
 		width = self.grid.rendering.width
 		size = self.grid.rendering.cell_size
 		for cell in self.grid.cells_iter(flags=['refs_ok'], op_flags=['readonly']):
@@ -49,7 +60,8 @@ class Renderer:
 		plane = self.grid.sub_grid([(0, 0)])
 		cells_enum = np.ndenumerate(plane.cells)
 		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
-		self.dirty += self.screen.blits(surfs, doreturn=True)
+		self.grid.surface.blits(surfs, doreturn=True)
+		self.resize(self.size)
 		self.loaded = True
 
 	def tick(self):
@@ -57,6 +69,12 @@ class Renderer:
 			self.load()
 		if len(self.dirty):
 			pg.display.update(self.dirty.pop(0))
+
+	def resize(self, new_size):
+		self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
+		self.screen.fill(Colors.WHITE)
+		self.screen.blit(self.grid.surface, (0, 0))
+		pg.display.flip()
 
 
 class PencilMarks:

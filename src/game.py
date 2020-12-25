@@ -5,7 +5,8 @@ from typing import Sequence, Tuple, Union
 import pygame as pg
 from pygame.locals import (
 	KEYDOWN,
-	QUIT
+	QUIT,
+	VIDEORESIZE,
 )
 
 from data import Regioning
@@ -24,6 +25,8 @@ class Game:
 		for event in pg.event.get():
 			if event.type == QUIT:
 				return False
+			if event.type == VIDEORESIZE:
+				self.renderer.resize(event.size)
 			if event.type == KEYDOWN:
 				if event.key in self.handlers:
 					self.handlers[event.key]()

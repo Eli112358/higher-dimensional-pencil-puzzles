@@ -1,6 +1,11 @@
 from __future__ import annotations
 
-from typing import Iterable, Optional, List, Tuple
+from typing import (
+	Iterable,
+	List,
+	Optional,
+	Tuple,
+)
 
 import numpy as np
 from pygame import Surface, SRCALPHA
