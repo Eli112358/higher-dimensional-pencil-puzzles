@@ -1,23 +1,16 @@
 import numpy as np
 from pygame import Surface, SRCALPHA
 
-from src.tuple_util import formula
+from data import Data, Regioning
+from rendering import Surfaces
 
 
-class RegionData:
+class Cell:
 
-	def __init__(self, regular=True, size=None):
-		self.regular = regular
-		self._size = size
-		if self.regular:
-			self._size = (3, 3)
-
-	def load(self, file):
-		# implement later to support irregular sudoku
-		pass
-
-	def size(self, scale=1, extra=0):
-		return formula(self._size, scale, extra)
+	def __init__(self, grid):
+		self.grid = grid
+		self.data = Data(self)
+		self.surfaces = Surfaces(self)
 
 
 class Grid:
@@ -27,7 +20,7 @@ class Grid:
 			cells=None,
 			dimensions=2,
 			parent=None,
-			region_data=RegionData(),
+			region_data=Regioning(),
 			rendering=None,
 	):
 		self._dimensions = None
@@ -68,54 +61,3 @@ class Grid:
 			# You've tried to go too far
 			# Warn in the logs later
 			return grid
-
-
-class Cell(np.object):
-
-	def __init__(self, grid):
-		self.grid = grid
-		self.surface = Surface(self.grid.rendering.size(), flags=SRCALPHA)
-		self.given = False
-		self.value = None
-		self.candidates = PencilMarks(self)  # center
-		self.contingencies = PencilMarks(self)  # corner
-
-	def set_given(self, value):
-		self.value = value
-		self.given = value is not None
-
-	def set_guess(self, value):
-		if not self.given:
-			self.value = value
-
-	@property
-	def color(self):
-		return self.grid.rendering.colors[int(self.given)]
-
-	@property
-	def font(self):
-		return self.grid.rendering.font
-
-	def clear(self):
-		self.surface.fill(self.grid.rendering.empty)
-
-	def render(self):
-		text = self.font.render(str(self.value), 1, self.color)
-		self.surface.blit(text, (0, 0))
-
-
-class PencilMarks(list):
-
-	def __init__(self, cell):
-		self.cell = cell
-		super().__init__([False] * (self.cell.grid.size + 1))
-
-	def fill(self, value):
-		for digit in range(len(self)):
-			self.set(digit, value)
-
-	def set(self, digit, value=True):
-		self[digit] = value
-
-	def toggle(self, digit):
-		self[digit] = not self[digit]

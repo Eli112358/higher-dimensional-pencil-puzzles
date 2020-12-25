@@ -2,13 +2,14 @@ import unittest
 
 import pygame as pg
 
-from src.game import Rendering, Colors
-from src.grid import Grid, Cell, RegionData
+from data import Regioning
+from grid import Cell, Grid
+from rendering import Colors, Rendering
 
 
 class TestGrid(unittest.TestCase):
 	pg.init()
-	region_data = RegionData()
+	region_data = Regioning()
 	region_data._size = (2, 2)
 	font = pg.font.SysFont('monospaced', 15)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
