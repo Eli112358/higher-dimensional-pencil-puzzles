@@ -1,8 +1,16 @@
+from __future__ import annotations
+
+from typing import List, Tuple, Sequence, Union, TYPE_CHECKING
+
 import numpy as np
 import pygame as pg
 from pygame import Color, Surface, SRCALPHA
+from pygame.font import Font
 
 from tuple_util import formula
+
+if TYPE_CHECKING:
+	from grid import Grid, Cell
 
 
 class Colors:
@@ -13,20 +21,20 @@ class Colors:
 
 class Rendering:
 
-	def __init__(self, font, colors, cell_size, width):
+	def __init__(self, font: Font, colors: List[Colors or Tuple[int, int, int]], cell_size: int, width: int):
 		self.cell_size = cell_size
 		self.colors = colors
 		self.font = font
 		self.width = width
 		self.empty = Color(0, 0, 0, 0)
 
-	def size(self, scale=1, margin=0):
+	def size(self, scale: Tuple[int, int] = (1, 1), margin: Tuple[int, int] = (0, 0)):
 		return formula(self.cell_size, scale, margin)
 
 
 class Renderer:
 
-	def __init__(self, grid, screen_size):
+	def __init__(self, grid: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
 		self.grid = grid
 		self.screen = pg.display.set_mode(screen_size)
 		self.dirty = []
@@ -40,7 +48,7 @@ class Renderer:
 			pg.draw.rect(cell[()].surfaces.background, Colors.BLACK, (0, 0, size, size), width)
 		plane = self.grid.sub_grid([(0, 0)])
 		cells_enum = np.ndenumerate(plane.cells)
-		surfs = [(cell.surfaces.background, (i*size, j*size)) for (i, j), cell in cells_enum]
+		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
 		self.dirty += self.screen.blits(surfs, doreturn=True)
 		self.loaded = True
 
@@ -53,20 +61,19 @@ class Renderer:
 
 class PencilMarks:
 
-	def __init__(self, surfaces):
-		self.surfaces = surfaces
-		self.center = Surface(self.surfaces.size, flags=SRCALPHA)
-		self.corner = Surface(self.surfaces.size, flags=SRCALPHA)
+	def __init__(self, size: Tuple[int, int]):
+		self.center = Surface(size, flags=SRCALPHA)
+		self.corner = Surface(size, flags=SRCALPHA)
 
 
 class Surfaces:
-	
-	def __init__(self, cell):
+
+	def __init__(self, cell: Cell):
 		self.cell = cell
 		self.background = Surface(self.size, flags=SRCALPHA)
 		self.selected = Surface(self.size, flags=SRCALPHA)
 		self.value = Surface(self.size, flags=SRCALPHA)
-		self.pencil_marks = PencilMarks(self)
+		self.pencil_marks = PencilMarks(self.size)
 
 	@property
 	def color(self):

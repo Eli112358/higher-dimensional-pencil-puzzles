@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import Sequence, Tuple, Union
+
 import pygame as pg
 from pygame.locals import (
 	KEYDOWN,
@@ -11,7 +15,7 @@ from rendering import Renderer, Rendering, Colors
 
 class Game:
 
-	def __init__(self, grid, screen_size):
+	def __init__(self, grid: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
 		self.grid = grid
 		self.renderer = Renderer(self.grid, screen_size)
 		self.handlers = {}
@@ -30,11 +34,11 @@ class Game:
 
 def main():
 	pg.init()
-	regions = Regioning(False, size=(2, 2))
+	regioning = Regioning(False, size=(2, 2))
 	screen_size = [500, 500]
 	font = pg.font.SysFont('monospaced', 15)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
-	grid = Grid(dimensions=3, region_data=regions, rendering=rendering)
+	grid = Grid(dimensions=3, regioning=regioning, rendering=rendering)
 	game = Game(grid, screen_size)
 	while game.mainloop():
 		pass

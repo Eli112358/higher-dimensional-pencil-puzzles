@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import unittest
 
 import pygame as pg
@@ -13,14 +15,14 @@ class TestGrid(unittest.TestCase):
 	region_data._size = (2, 2)
 	font = pg.font.SysFont('monospaced', 15)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
-	grid = Grid(dimensions=3, region_data=region_data, rendering=rendering)
+	grid = Grid(dimensions=3, regioning=region_data, rendering=rendering)
 
 	def test_dimensions(self):
 		self.assertEqual(self.grid.dimensions, 3)
 
 	def test_region_size(self):
-		self.assertEqual(self.grid.region_data.size()[0], 2)
-		self.assertEqual(self.grid.region_data.size()[1], 2)
+		self.assertEqual(self.grid.regioning.size()[0], 2)
+		self.assertEqual(self.grid.regioning.size()[1], 2)
 
 	def test_size(self):
 		self.assertEqual(self.grid.size, 4)
