@@ -52,10 +52,10 @@ class Grid:
 			self.surface = Surface(self.rendering.size(self.size, margin), flags=SRCALPHA)
 		if self.cells is None:
 			self.cells = np.empty([self.size] * self.dimensions, Cell)
-			for cell in self.cells_iter(op_flags=['writeonly']):
+			for cell in self.iterator(op_flags=['writeonly']):
 				cell[...] = Cell(self)
 
-	def cells_iter(self, flags: Flags = None, op_flags: Flags = None) -> np.nditer:
+	def iterator(self, flags: Flags = None, op_flags: Flags = None) -> np.nditer:
 		if flags is None:
 			flags = ['refs_ok']
 		if op_flags is None:

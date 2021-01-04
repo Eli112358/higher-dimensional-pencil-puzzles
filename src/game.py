@@ -33,7 +33,7 @@ class Game:
 			cell = self.plane.cells[coords]
 			cell.selected = not cell.selected
 		except IndexError:
-			for cell in self.plane.cells_iter():
+			for cell in self.plane.iterator():
 				cell[()].selected = False
 
 	def mainloop(self) -> bool:

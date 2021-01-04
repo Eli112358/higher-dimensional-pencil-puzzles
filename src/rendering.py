@@ -58,7 +58,7 @@ class Renderer:
 
 	def tick(self):
 		size = self.plane.rendering.cell_size
-		for cell in self.plane.cells_iter():
+		for cell in self.plane.iterator():
 			cell[()].surfaces.render()
 		cells_enum = np.ndenumerate(self.plane.cells)
 		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
