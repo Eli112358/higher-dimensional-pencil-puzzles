@@ -93,6 +93,7 @@ class Surfaces:
 		self.selected = Surface(self.size, flags=SRCALPHA)
 		self.value = Surface(self.size, flags=SRCALPHA)
 		self.pencil_marks = PencilMarks(self.size)
+		self.selected.fill(Colors.SELECTED)
 
 	@property
 	def color(self) -> Colors:
