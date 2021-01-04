@@ -24,6 +24,10 @@ class Game:
 		self.renderer = Renderer(self.plane, screen_size)
 		self.handlers = {}
 
+	def clear_selection(self):
+		for cell in self.plane.iterator():
+			cell[()].selected = False
+
 	def click(self):
 		pos = pg.mouse.get_pos()
 		size = self.plane.rendering.size()
@@ -33,8 +37,7 @@ class Game:
 			cell = self.plane.cells[coords]
 			cell.selected = not cell.selected
 		except IndexError:
-			for cell in self.plane.iterator():
-				cell[()].selected = False
+			self.clear_selection()
 
 	def mainloop(self) -> bool:
 		for event in pg.event.get():
