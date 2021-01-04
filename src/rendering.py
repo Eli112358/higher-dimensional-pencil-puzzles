@@ -106,11 +106,9 @@ class Surfaces:
 	def size(self) -> Tuple[int, int]:
 		return self.cell.grid.rendering.size()
 
-	def clear(self):
-		self.value.fill(self.cell.grid.rendering.empty)
-
 	def render(self):
 		text = self.font.render(str(self.cell.data.value), 1, self.color)
+		self.value.fill(self.cell.grid.rendering.empty)
 		self.value.blit(text, (0, 0))
 		self.background.fill(Colors.WHITE)
 		surfs = [
