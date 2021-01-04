@@ -15,13 +15,13 @@ class Data(np.object):
 	def __init__(self, cell: Cell):
 		self.cell = cell
 		self.given = False
-		self.value = None
+		self.value = ''
 		self.candidates = PencilMarks(self)  # center
 		self.contingencies = PencilMarks(self)  # corner
 
 	def set_given(self, value: int):
 		self.value = value
-		self.given = value is not None
+		self.given = value != ''
 
 	def set_guess(self, value: int):
 		if not self.given:
