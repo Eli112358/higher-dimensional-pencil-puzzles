@@ -13,6 +13,8 @@ from pygame import Surface, SRCALPHA
 from data import Data, Regioning
 from rendering import Surfaces, Rendering
 
+Flags = Optional[Iterable[str]]
+
 
 class Cell:
 
@@ -50,10 +52,14 @@ class Grid:
 			self.surface = Surface(self.rendering.size(self.size, margin), flags=SRCALPHA)
 		if self.cells is None:
 			self.cells = np.empty([self.size] * self.dimensions, Cell)
-			for cell in self.cells_iter(flags=['refs_ok'], op_flags=['writeonly']):
+			for cell in self.cells_iter(op_flags=['writeonly']):
 				cell[...] = Cell(self)
 
-	def cells_iter(self, flags: Optional[Iterable[str]] = None, op_flags=None) -> np.nditer:
+	def cells_iter(self, flags: Flags = None, op_flags: Flags = None) -> np.nditer:
+		if flags is None:
+			flags = ['refs_ok']
+		if op_flags is None:
+			op_flags = ['readonly']
 		return np.nditer(self.cells, flags=flags, op_flags=op_flags)
 
 	def sub_grid(self, index_pairs: List[Tuple[int, int]]) -> Grid:

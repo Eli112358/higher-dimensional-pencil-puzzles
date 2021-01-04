@@ -21,6 +21,7 @@ from pygame.font import Font
 from tuple_util import formula
 
 if TYPE_CHECKING:
+	from data import Size
 	from grid import Grid, Cell
 
 
@@ -40,13 +41,13 @@ class Rendering:
 		self.width = width
 		self.empty = Color(0, 0, 0, 0)
 
-	def size(self, scale: Tuple[int, int] = (1, 1), margin: Tuple[int, int] = (0, 0)) -> Tuple[int, int]:
+	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> Size:
 		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)
 
 
 class Renderer:
 
-	def __init__(self, plane: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
+	def __init__(self, plane: Grid, screen_size: Union[Size, Sequence[int], None]):
 		self.dirty = []
 		self.loaded = False
 		self.plane = plane
@@ -57,7 +58,7 @@ class Renderer:
 
 	def tick(self):
 		size = self.plane.rendering.cell_size
-		for cell in self.plane.cells_iter(flags=['refs_ok'], op_flags=['readonly']):
+		for cell in self.plane.cells_iter():
 			cell[()].surfaces.render()
 		cells_enum = np.ndenumerate(self.plane.cells)
 		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
@@ -65,7 +66,7 @@ class Renderer:
 		self.resize(self.size)
 		pg.display.flip()
 
-	def resize(self, new_size):
+	def resize(self, new_size: Union[Size, Sequence[int]]):
 		if not self.loaded:
 			self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
 			self.loaded = True
@@ -76,7 +77,7 @@ class Renderer:
 
 class PencilMarks:
 
-	def __init__(self, size: Tuple[int, int]):
+	def __init__(self, size: Size):
 		self.center = Surface(size, flags=SRCALPHA)
 		self.corner = Surface(size, flags=SRCALPHA)
 

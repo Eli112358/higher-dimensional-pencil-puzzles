@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Sequence, Tuple, Union
+from typing import Sequence, Union
 
 import pygame as pg
 from pygame.locals import (
@@ -10,7 +10,7 @@ from pygame.locals import (
 	VIDEORESIZE,
 )
 
-from data import Regioning
+from data import Regioning, Size
 from grid import Grid
 from rendering import Renderer, Rendering, Colors
 from tuple_util import formula
@@ -18,7 +18,7 @@ from tuple_util import formula
 
 class Game:
 
-	def __init__(self, grid: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
+	def __init__(self, grid: Grid, screen_size: Union[Size, Sequence[int], None]):
 		self.grid = grid
 		self.plane = self.grid.sub_grid([(0, 0)])
 		self.renderer = Renderer(self.plane, screen_size)
@@ -33,7 +33,7 @@ class Game:
 			cell = self.plane.cells[coords]
 			cell.selected = not cell.selected
 		except IndexError:
-			for cell in self.plane.cells_iter(flags=['refs_ok'], op_flags=['readonly']):
+			for cell in self.plane.cells_iter():
 				cell[()].selected = False
 
 	def mainloop(self) -> bool:

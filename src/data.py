@@ -6,6 +6,8 @@ import numpy as np
 
 from src.tuple_util import formula
 
+Size = Tuple[int, int]
+
 if TYPE_CHECKING:
 	from grid import Cell
 
@@ -47,7 +49,7 @@ class PencilMarks(list):
 
 class Regioning:
 
-	def __init__(self, regular: bool = True, size: Tuple[int, int] = None):
+	def __init__(self, regular: bool = True, size: Size = None):
 		self.regular = regular
 		self._size = size
 		if self.regular:
@@ -57,5 +59,5 @@ class Regioning:
 		# implement later to support irregular sudoku
 		pass
 
-	def size(self, scale: Tuple[int, int] = (1, 1), extra: Tuple[int, int] = (0, 0)):
+	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)):
 		return formula(self._size, scale, extra, lambda ss, s, e: (ss * s) + e)
