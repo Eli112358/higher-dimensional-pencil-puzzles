@@ -39,7 +39,7 @@ class Rendering:
 		self.width = width
 		self.empty = Color(0, 0, 0, 0)
 
-	def size(self, scale: Tuple[int, int] = (1, 1), margin: Tuple[int, int] = (0, 0)):
+	def size(self, scale: Tuple[int, int] = (1, 1), margin: Tuple[int, int] = (0, 0)) -> Tuple[int, int]:
 		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)
 
 
@@ -94,15 +94,15 @@ class Surfaces:
 		self.pencil_marks = PencilMarks(self.size)
 
 	@property
-	def color(self):
+	def color(self) -> Colors:
 		return self.cell.grid.rendering.colors[int(self.cell.data.given)]
 
 	@property
-	def font(self):
+	def font(self) -> Font:
 		return self.cell.grid.rendering.font
 
 	@property
-	def size(self):
+	def size(self) -> Tuple[int, int]:
 		return self.cell.grid.rendering.size()
 
 	def clear(self):

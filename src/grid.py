@@ -53,10 +53,10 @@ class Grid:
 			for cell in self.cells_iter(flags=['refs_ok'], op_flags=['writeonly']):
 				cell[...] = Cell(self)
 
-	def cells_iter(self, flags: Optional[Iterable[str]] = None, op_flags=None):
+	def cells_iter(self, flags: Optional[Iterable[str]] = None, op_flags=None) -> np.nditer:
 		return np.nditer(self.cells, flags=flags, op_flags=op_flags)
 
-	def sub_grid(self, index_pairs: List[Tuple[int, int]]):
+	def sub_grid(self, index_pairs: List[Tuple[int, int]]) -> Grid:
 		if len(index_pairs) == 0 or isinstance(self.cells, Cell):
 			return self
 		axis, index = index_pairs[0]
