@@ -117,3 +117,12 @@ class Surfaces:
 	def render(self):
 		text = self.font.render(str(self.cell.data.value), 1, self.color)
 		self.value.blit(text, (0, 0))
+		self.background.fill(Colors.WHITE)
+		surfs = [
+			self.border,
+			self.value,
+		]
+		if self.cell.selected:
+			surfs.append(self.selected)
+		for s in surfs:
+			self.background.blit(s, (0, 0))
