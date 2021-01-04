@@ -54,6 +54,8 @@ class Grid:
 			self.cells = np.empty([self.size] * self.dimensions, Cell)
 			for cell in self.iterator(op_flags=['writeonly']):
 				cell[...] = Cell(self)
+			for coords, cell in self.enumerator:
+				cell.coords = coords
 
 	def iterator(self, flags: Flags = None, op_flags: Flags = None) -> np.nditer:
 		if flags is None:
