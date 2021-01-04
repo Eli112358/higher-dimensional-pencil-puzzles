@@ -20,6 +20,7 @@ class Cell:
 		self.grid = grid
 		self.data = Data(self)
 		self.surfaces = Surfaces(self)
+		self.selected = False
 
 
 class Grid:
