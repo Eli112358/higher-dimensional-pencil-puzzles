@@ -32,7 +32,6 @@ class Grid:
 			regioning: Regioning = Regioning(),
 			rendering: Rendering = None,
 	):
-		self._dimensions = None
 		self.cells = cells
 		self.parent = parent
 		self.dimensions = dimensions
