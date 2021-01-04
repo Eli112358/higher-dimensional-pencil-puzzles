@@ -56,10 +56,10 @@ class Renderer:
 		self.tick()
 
 	def tick(self):
-		size = self.plane.rendering.cell_size
+		size = self.plane.rendering.size
 		for cell in self.plane.iterator():
 			cell[()].surfaces.render()
-		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in self.plane.enumerator]
+		surfs = [(cell.surfaces.background, size(coords)) for coords, cell in self.plane.enumerator]
 		self.plane.surface.blits(surfs, doreturn=False)
 		self.resize(self.size)
 		pg.display.flip()
