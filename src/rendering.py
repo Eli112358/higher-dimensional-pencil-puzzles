@@ -40,7 +40,7 @@ class Rendering:
 		self.empty = Color(0, 0, 0, 0)
 
 	def size(self, scale: Tuple[int, int] = (1, 1), margin: Tuple[int, int] = (0, 0)):
-		return formula(self.cell_size, scale, margin)
+		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)
 
 
 class Renderer:

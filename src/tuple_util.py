@@ -10,5 +10,5 @@ def ensure(t):
 	return t
 
 
-def formula(t_a, t_b, t_c):
-	return tuple((a * b) + c for a, b, c in zip(ensure(t_a), ensure(t_b), ensure(t_c)))
+def formula(t_a, t_b, t_c, f):
+	return tuple(f(a, b, c) for a, b, c in zip(ensure(t_a), ensure(t_b), ensure(t_c)))

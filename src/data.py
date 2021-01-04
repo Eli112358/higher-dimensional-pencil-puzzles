@@ -58,4 +58,4 @@ class Regioning:
 		pass
 
 	def size(self, scale: Tuple[int, int] = (1, 1), extra: Tuple[int, int] = (0, 0)):
-		return formula(self._size, scale, extra)
+		return formula(self._size, scale, extra, lambda ss, s, e: (ss * s) + e)
