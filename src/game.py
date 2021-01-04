@@ -21,7 +21,7 @@ class Game:
 		self.renderer = Renderer(self.grid, screen_size)
 		self.handlers = {}
 
-	def mainloop(self):
+	def mainloop(self) -> bool:
 		for event in pg.event.get():
 			if event.type == QUIT:
 				return False
