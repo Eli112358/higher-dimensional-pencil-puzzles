@@ -90,9 +90,13 @@ class Surfaces:
 	def __init__(self, cell: Cell):
 		self.cell = cell
 		self.background = Surface(self.size, flags=SRCALPHA)
+		self.border = Surface(self.size, flags=SRCALPHA)
 		self.selected = Surface(self.size, flags=SRCALPHA)
 		self.value = Surface(self.size, flags=SRCALPHA)
 		self.pencil_marks = PencilMarks(self.size)
+		width = self.cell.grid.rendering.width
+		size = self.cell.grid.rendering.cell_size
+		pg.draw.rect(self.border, Colors.BLACK, (0, 0, size, size), width)
 		self.selected.fill(Colors.SELECTED)
 
 	@property
