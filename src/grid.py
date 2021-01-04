@@ -28,7 +28,7 @@ class Grid:
 			self,
 			cells: np.ndarray = None,
 			dimensions: int = 2,
-			parent=None,
+			parent: Grid = None,
 			regioning: Regioning = Regioning(),
 			rendering: Rendering = None,
 	):
