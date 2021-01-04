@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 class Colors:
 	BLACK = (0, 0, 0)
 	PENCIL = (29, 106, 229)
+	SELECTED = (230, 217, 48, 128)
 	WHITE = (255, 255, 255)
 
 
