@@ -30,9 +30,12 @@ class Game:
 
 	def click(self):
 		pos = pg.mouse.get_pos()
+		ctrl_held = pg.key.get_mods() & pg.KMOD_CTRL
 		size = self.plane.rendering.size()
 		width = self.plane.rendering.width
 		coords = formula(pos, size, width, lambda p, s, w: p // (s + w))
+		if not ctrl_held:
+			self.clear_selection()
 		try:
 			cell = self.plane.cells[coords]
 			cell.selected = not cell.selected
