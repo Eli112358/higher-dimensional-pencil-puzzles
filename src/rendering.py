@@ -52,27 +52,23 @@ class Renderer:
 		self.plane = plane
 		self.screen = None
 		self.size = screen_size
-
-	def load(self):
-		width = self.grid.rendering.width
-		size = self.grid.rendering.cell_size
-		for cell in self.grid.cells_iter(flags=['refs_ok'], op_flags=['readonly']):
-			pg.draw.rect(cell[()].surfaces.background, Colors.BLACK, (0, 0, size, size), width)
-		plane = self.grid.sub_grid([(0, 0)])
-		cells_enum = np.ndenumerate(plane.cells)
-		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
-		self.grid.surface.blits(surfs, doreturn=True)
 		self.resize(self.size)
-		self.loaded = True
+		self.tick()
 
 	def tick(self):
-		if not self.loaded:
-			self.load()
-		if len(self.dirty):
-			pg.display.update(self.dirty.pop(0))
+		size = self.plane.rendering.cell_size
+		for cell in self.plane.cells_iter(flags=['refs_ok'], op_flags=['readonly']):
+			cell[()].surfaces.render()
+		cells_enum = np.ndenumerate(self.plane.cells)
+		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
+		self.plane.surface.blits(surfs, doreturn=False)
+		self.resize(self.size)
+		pg.display.flip()
 
 	def resize(self, new_size):
-		self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
+		if not self.loaded:
+			self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
+			self.loaded = True
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, (0, 0))
 		pg.display.flip()
