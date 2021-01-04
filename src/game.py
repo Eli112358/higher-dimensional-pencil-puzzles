@@ -18,7 +18,8 @@ class Game:
 
 	def __init__(self, grid: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
 		self.grid = grid
-		self.renderer = Renderer(self.grid, screen_size)
+		self.plane = self.grid.sub_grid([(0, 0)])
+		self.renderer = Renderer(self.plane, screen_size)
 		self.handlers = {}
 
 	def mainloop(self) -> bool:

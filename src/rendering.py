@@ -45,10 +45,10 @@ class Rendering:
 
 class Renderer:
 
-	def __init__(self, grid: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
+	def __init__(self, plane: Grid, screen_size: Union[Tuple[int, int], Sequence[int], None]):
 		self.dirty = []
-		self.grid = grid
 		self.loaded = False
+		self.plane = plane
 		self.screen = None
 		self.size = screen_size
 
@@ -73,7 +73,7 @@ class Renderer:
 	def resize(self, new_size):
 		self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
 		self.screen.fill(Colors.WHITE)
-		self.screen.blit(self.grid.surface, (0, 0))
+		self.screen.blit(self.plane.surface, (0, 0))
 		pg.display.flip()
 
 
