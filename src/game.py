@@ -3,11 +3,32 @@ from __future__ import annotations
 from typing import Sequence, Union
 
 import pygame as pg
+from pygame.event import Event
 from pygame.locals import (
 	KEYDOWN,
 	MOUSEBUTTONDOWN,
 	QUIT,
 	VIDEORESIZE,
+	K_0,
+	K_1,
+	K_2,
+	K_3,
+	K_4,
+	K_5,
+	K_6,
+	K_7,
+	K_8,
+	K_9,
+	K_KP0,
+	K_KP1,
+	K_KP2,
+	K_KP3,
+	K_KP4,
+	K_KP5,
+	K_KP6,
+	K_KP7,
+	K_KP8,
+	K_KP9,
 )
 
 from data import Regioning, Size
@@ -17,12 +38,33 @@ from tuple_util import formula
 
 
 class Game:
+	number_keys = [
+		K_0,
+		K_1,
+		K_2,
+		K_3,
+		K_4,
+		K_5,
+		K_6,
+		K_7,
+		K_8,
+		K_9,
+		K_KP0,
+		K_KP1,
+		K_KP2,
+		K_KP3,
+		K_KP4,
+		K_KP5,
+		K_KP6,
+		K_KP7,
+		K_KP8,
+		K_KP9,
+	]
 
 	def __init__(self, grid: Grid, screen_size: Union[Size, Sequence[int], None]):
 		self.grid = grid
 		self.plane = self.grid.sub_grid([(0, 0)])
 		self.renderer = Renderer(self.plane, screen_size)
-		self.handlers = {}
 
 	def clear_selection(self):
 		for cell in self.plane.iterator():
@@ -42,6 +84,12 @@ class Game:
 		except IndexError:
 			self.clear_selection()
 
+	def enter_digit(self, event: Event):
+		digit = self.number_keys.index(event.key) % 10
+		selected = [cell[()] for cell in self.plane.iterator() if cell[()].selected]
+		for cell in selected:
+			cell.data.set_guess(digit)
+
 	def mainloop(self) -> bool:
 		for event in pg.event.get():
 			if event.type == QUIT:
@@ -51,8 +99,8 @@ class Game:
 			if event.type == MOUSEBUTTONDOWN:
 				self.click()
 			if event.type == KEYDOWN:
-				if event.key in self.handlers.keys():
-					self.handlers[event.key](event)
+				if event.key in self.number_keys:
+					self.enter_digit(event)
 
 		self.renderer.tick()
 		return True
