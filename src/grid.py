@@ -62,6 +62,10 @@ class Grid:
 			op_flags = ['readonly']
 		return np.nditer(self.cells, flags=flags, op_flags=op_flags)
 
+	@property
+	def enumerator(self):
+		return np.ndenumerate(self.cells)
+
 	def sub_grid(self, index_pairs: List[Tuple[int, int]]) -> Grid:
 		if len(index_pairs) == 0 or isinstance(self.cells, Cell):
 			return self

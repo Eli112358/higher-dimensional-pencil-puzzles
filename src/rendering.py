@@ -8,7 +8,6 @@ from typing import (
 	Union,
 )
 
-import numpy as np
 import pygame as pg
 from pygame import (
 	Color,
@@ -60,8 +59,7 @@ class Renderer:
 		size = self.plane.rendering.cell_size
 		for cell in self.plane.iterator():
 			cell[()].surfaces.render()
-		cells_enum = np.ndenumerate(self.plane.cells)
-		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in cells_enum]
+		surfs = [(cell.surfaces.background, (i * size, j * size)) for (i, j), cell in self.plane.enumerator]
 		self.plane.surface.blits(surfs, doreturn=False)
 		self.resize(self.size)
 		pg.display.flip()
