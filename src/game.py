@@ -7,6 +7,7 @@ from pygame.event import Event
 from pygame.locals import (
 	KEYDOWN,
 	MOUSEBUTTONDOWN,
+	MOUSEBUTTONUP,
 	QUIT,
 	VIDEORESIZE,
 )
@@ -24,24 +25,37 @@ class Game:
 		self.grid = grid
 		self.plane = self.grid.sub_grid([(0, 0)])
 		self.renderer = Renderer(self.plane, screen_size)
+		self.mouse_down = False
+		self.mouse_edge = False
 
 	def clear_selection(self):
 		for cell in self.plane.iterator():
 			cell[()].selected = False
 
-	def click(self):
+	def clear_interactions(self):
+		for cell in self.plane.iterator():
+			cell[()].interacted = False
+
+	def select_cell(self):
 		pos = pg.mouse.get_pos()
 		ctrl_held = pg.key.get_mods() & pg.KMOD_CTRL
+		shift_held = pg.key.get_mods() & pg.KMOD_SHIFT
 		size = self.plane.rendering.size()
 		width = self.plane.rendering.width
 		coords = formula(pos, size, width, lambda p, s, w: p // (s + w))
-		if not ctrl_held:
+		if not (ctrl_held or shift_held) and self.mouse_edge:
 			self.clear_selection()
 		try:
 			cell = self.plane.cells[coords]
-			cell.selected = not cell.selected
+			if not cell.interacted:
+				if ctrl_held:
+					cell.selected = not cell.selected
+				else:
+					cell.selected = True
+				cell.interacted = True
+			self.mouse_edge = False
 		except IndexError:
-			self.clear_selection()
+			pass
 
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
@@ -56,11 +70,20 @@ class Game:
 			if event.type == VIDEORESIZE:
 				self.renderer.resize(event.size)
 			if event.type == MOUSEBUTTONDOWN:
-				self.click()
+				# rising edge
+				self.mouse_down = True
+				self.mouse_edge = True
+			if event.type == MOUSEBUTTONUP:
+				# falling edge
+				self.mouse_down = False
+				self.mouse_edge = True
 			if event.type == KEYDOWN:
 				if event.key in number_keys:
 					self.enter_digit(event)
-
+		if self.mouse_down:
+			self.select_cell()
+		if not self.mouse_down and self.mouse_edge:
+			self.clear_interactions()
 		self.renderer.tick()
 		return True
 

@@ -23,6 +23,7 @@ class Cell:
 		self.data = Data(self)
 		self.surfaces = Surfaces(self)
 		self.selected = False
+		self.interacted = False
 
 
 class Grid:
