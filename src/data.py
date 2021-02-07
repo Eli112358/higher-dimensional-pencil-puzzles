@@ -1,10 +1,8 @@
 from __future__ import annotations
 
-from typing import Tuple, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 import numpy as np
-
-Size = Tuple[int, int]
 
 if TYPE_CHECKING:
 	from grid import Cell

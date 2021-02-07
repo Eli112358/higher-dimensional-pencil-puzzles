@@ -12,10 +12,9 @@ from pygame.locals import (
 	VIDEORESIZE,
 )
 
-from data import Size
 from grid import Grid, Regioning
 from keys import number_keys
-from rendering import Renderer, Rendering, Colors
+from rendering import Colors, Renderer, Rendering, Size
 from tuple_util import formula
 
 

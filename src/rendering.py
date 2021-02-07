@@ -20,8 +20,9 @@ from pygame.font import Font
 from tuple_util import formula
 
 if TYPE_CHECKING:
-	from data import Size
 	from grid import Grid, Cell
+
+Size = Union[int, Tuple[int, int]]
 
 
 class Colors:

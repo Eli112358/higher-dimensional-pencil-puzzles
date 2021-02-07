@@ -10,8 +10,8 @@ from typing import (
 import numpy as np
 from pygame import Surface, SRCALPHA
 
-from data import Data, Size
-from rendering import Surfaces, Rendering
+from data import Data
+from rendering import Rendering, Size, Surfaces
 from tuple_util import formula
 
 Flags = Optional[Iterable[str]]
