@@ -14,6 +14,7 @@ from data import Data
 from rendering import Rendering, Size, Surfaces
 from tuple_util import formula
 
+Coordinate = Tuple[int, ...]
 Flags = Optional[Iterable[str]]
 
 
@@ -31,6 +32,39 @@ class Regioning:
 
 	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)):
 		return formula(self._size, scale, extra, lambda ss, s, e: (ss * s) + e)
+
+
+class CellBase:
+
+	def __init__(self, grid: GridBase):
+		self.grid = grid
+
+
+class GridBase:
+
+	def __init__(self, dimensions: int = 2, size: int = 9, cell_type: type = CellBase):
+		self.dimensions = dimensions
+		self.size = size
+		self.cells = np.empty([self.size] * self.dimensions, cell_type)
+		for cell in self.iterator(op_flags=['writeonly']):
+			cell[...] = cell_type(self)
+
+	@property
+	def enumerator(self):
+		return np.ndenumerate(self.cells)
+
+	def get_coordinates(self, target: CellBase) -> Coordinate:
+		for coordinates, cell in self.enumerator:
+			if cell == target:
+				return coordinates
+		raise KeyError('target cell is not in grid')
+
+	def iterator(self, flags: Flags = None, op_flags: Flags = None) -> np.nditer:
+		if flags is None:
+			flags = ['refs_ok']
+		if op_flags is None:
+			op_flags = ['readonly']
+		return np.nditer(self.cells, flags=flags, op_flags=op_flags)
 
 
 class Cell:
