@@ -4,8 +4,6 @@ from typing import Tuple, TYPE_CHECKING
 
 import numpy as np
 
-from src.tuple_util import formula
-
 Size = Tuple[int, int]
 
 if TYPE_CHECKING:
@@ -45,19 +43,3 @@ class PencilMarks(list):
 
 	def toggle(self, digit: int):
 		self[digit] = not self[digit]
-
-
-class Regioning:
-
-	def __init__(self, regular: bool = True, size: Size = None):
-		self.regular = regular
-		self._size = size
-		if self.regular:
-			self._size = (3, 3)
-
-	def load(self, file):
-		# implement later to support irregular sudoku
-		pass
-
-	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)):
-		return formula(self._size, scale, extra, lambda ss, s, e: (ss * s) + e)

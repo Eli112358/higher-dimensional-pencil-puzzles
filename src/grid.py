@@ -10,10 +10,27 @@ from typing import (
 import numpy as np
 from pygame import Surface, SRCALPHA
 
-from data import Data, Regioning
+from data import Data, Size
 from rendering import Surfaces, Rendering
+from tuple_util import formula
 
 Flags = Optional[Iterable[str]]
+
+
+class Regioning:
+
+	def __init__(self, regular: bool = True, size: Size = None):
+		self.regular = regular
+		self._size = size
+		if self.regular:
+			self._size = (3, 3)
+
+	def load(self, file):
+		# implement later to support irregular sudoku
+		pass
+
+	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)):
+		return formula(self._size, scale, extra, lambda ss, s, e: (ss * s) + e)
 
 
 class Cell:

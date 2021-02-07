@@ -4,8 +4,7 @@ import unittest
 
 import pygame as pg
 
-from data import Regioning
-from grid import Cell, Grid
+from grid import Cell, Grid, Regioning
 from rendering import Colors, Rendering
 
 
