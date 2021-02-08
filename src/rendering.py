@@ -55,25 +55,24 @@ class Renderer:
 
 	def __init__(
 			self,
-			plane: Grid,
+			grid: Grid,
 			screen_size: Union[Size, Sequence[int], None],
+			rendering: Rendering,
 	):
-		self.dirty = []
+		self.grid = grid
 		self.loaded = False
-		self.plane = plane
+		self.rendering = rendering
 		self.screen = None
 		self.size = screen_size
-		self.resize(self.size)
-		self.tick()
+		self.plane = None
 
 	def tick(self):
-		size = self.plane.rendering.size
+		size = self.rendering.size
 		for cell in self.plane.iterator():
 			cell[()].surfaces.render()
 		surfs = [(cell.surfaces.background, size(coord)) for coord, cell in self.plane.enumerator]
 		self.plane.surface.blits(surfs, doreturn=False)
 		self.resize(self.size)
-		pg.display.flip()
 
 	def resize(self, new_size: Size):
 		if not self.loaded:

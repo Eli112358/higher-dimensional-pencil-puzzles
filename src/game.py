@@ -24,10 +24,11 @@ class Game:
 			self,
 			grid: Grid,
 			screen_size: Union[Size, Sequence[int], None],
+			rendering: Rendering,
 	):
 		self.grid = grid
 		self.plane = self.grid.sub_grid([(0, 0)])
-		self.renderer = Renderer(self.plane, screen_size)
+		self.renderer = Renderer(self.grid, screen_size, rendering)
 		self.mouse_down = False
 		self.mouse_edge = False
 
@@ -99,7 +100,7 @@ def main():
 	font = pg.font.SysFont('monospaced', font_size)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
 	grid = Grid(dimensions=3, regioning=regioning, rendering=rendering)
-	game = Game(grid, screen_size)
+	game = Game(grid, screen_size, rendering)
 	while game.mainloop():
 		pass
 
