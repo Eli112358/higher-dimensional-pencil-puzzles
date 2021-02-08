@@ -73,6 +73,13 @@ class GridBase:
 
 
 class Cell(CellBase):
+	class Field:
+		CANDIDATE = 'candidate'
+		CONTINGENCY = 'contingency'
+
+		@staticmethod
+		def error(name):
+			return ValueError(f'{name} should be one of Cell.Field literals')
 
 	def __init__(self, grid: Grid):
 		super().__init__(grid)
@@ -89,6 +96,32 @@ class Cell(CellBase):
 	def set_guess(self, value: int):
 		if not self.given:
 			self.value = value
+
+	def is_set(self, digit: int, field: Field):
+		_field = self.candidates if field is Cell.Field.CANDIDATE else self.contingencies
+		return _field & (1 << digit)
+
+	def set(self, digit: int, field: Field):
+		bit = 1 << digit
+		if field is Cell.Field.CANDIDATE:
+			self.candidates &= bit
+		elif field is Cell.Field.CONTINGENCY:
+			self.contingencies &= bit
+		else:
+			raise Cell.Field.error('field')
+
+	def clear(self, digit: int, field: Field):
+		if self.is_set(digit, field):
+			self.toggle(digit, field)
+
+	def toggle(self, digit: int, field: Field):
+		bit = 1 << digit
+		if field is Cell.Field.CANDIDATE:
+			self.candidates ^= bit
+		elif field is Cell.Field.CONTINGENCY:
+			self.contingencies ^= bit
+		else:
+			raise Cell.Field.error('field')
 
 
 class Grid(GridBase):

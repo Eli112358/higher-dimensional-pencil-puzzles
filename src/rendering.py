@@ -17,15 +17,14 @@ from pygame import (
 )
 from pygame.font import Font
 
+from grid import CellBase, GridBase
 from tuple_util import formula
 
 if TYPE_CHECKING:
 	from grid import (
 		Cell,
-		CellBase,
 		Coordinates,
 		Grid,
-		GridBase,
 	)
 
 Size = Union[int, Tuple[int, int]]

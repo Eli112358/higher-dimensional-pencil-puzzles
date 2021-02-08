@@ -16,6 +16,7 @@ from grid import Grid, Regioning
 from keys import number_keys
 from rendering import (
 	Colors,
+	GridRenderer,
 	Renderer,
 	Rendering,
 	Size,
@@ -37,14 +38,6 @@ class Game:
 		self.mouse_down = False
 		self.mouse_edge = False
 
-	def clear_selection(self):
-		for cell in self.renderer.plane.iterator():
-			cell[()].selected = False
-
-	def clear_interactions(self):
-		for cell in self.renderer.plane.iterator():
-			cell[()].interacted = False
-
 	def select_cell(self):
 		pos = pg.mouse.get_pos()
 		ctrl_held = pg.key.get_mods() & pg.KMOD_CTRL
@@ -52,7 +45,7 @@ class Game:
 		size = self.renderer.rendering.size()
 		coord = formula(pos, size, 0, lambda p, s, w: p // (s + w))
 		if not (ctrl_held or shift_held) and self.mouse_edge:
-			self.clear_selection()
+			self.renderer.plane.clear(GridRenderer.Clearable.SELECTIONS)
 		try:
 			cell = self.renderer.plane.cells[coord]
 			if not cell.interacted:
@@ -91,7 +84,7 @@ class Game:
 		if self.mouse_down:
 			self.select_cell()
 		if not self.mouse_down and self.mouse_edge:
-			self.clear_interactions()
+			self.renderer.plane.clear(GridRenderer.Clearable.INTERACTIONS)
 		self.renderer.tick()
 		return True
 
@@ -99,7 +92,7 @@ class Game:
 def main():
 	pg.init()
 	regioning = Regioning(False, size=(2, 2))
-	screen_size = [500, 500]
+	screen_size = (500, 500)
 	font_size = 50
 	font = pg.font.SysFont('monospaced', font_size)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
