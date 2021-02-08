@@ -14,7 +14,12 @@ from pygame.locals import (
 
 from grid import Grid, Regioning
 from keys import number_keys
-from rendering import Colors, Renderer, Rendering, Size
+from rendering import (
+	Colors,
+	Renderer,
+	Rendering,
+	Size,
+)
 from tuple_util import formula
 
 
@@ -27,30 +32,29 @@ class Game:
 			rendering: Rendering,
 	):
 		self.grid = grid
-		self.plane = self.grid.sub_grid([(0, 0)])
-		self.renderer = Renderer(self.grid, screen_size, rendering)
+		zeros = tuple([0] * (self.grid.dimensions - 2))
+		self.renderer = Renderer(self.grid, zeros, screen_size, rendering)
 		self.mouse_down = False
 		self.mouse_edge = False
 
 	def clear_selection(self):
-		for cell in self.plane.iterator():
+		for cell in self.renderer.plane.iterator():
 			cell[()].selected = False
 
 	def clear_interactions(self):
-		for cell in self.plane.iterator():
+		for cell in self.renderer.plane.iterator():
 			cell[()].interacted = False
 
 	def select_cell(self):
 		pos = pg.mouse.get_pos()
 		ctrl_held = pg.key.get_mods() & pg.KMOD_CTRL
 		shift_held = pg.key.get_mods() & pg.KMOD_SHIFT
-		size = self.plane.rendering.size()
-		width = self.plane.rendering.width
-		coord = formula(pos, size, width, lambda p, s, w: p // (s + w))
+		size = self.renderer.rendering.size()
+		coord = formula(pos, size, 0, lambda p, s, w: p // (s + w))
 		if not (ctrl_held or shift_held) and self.mouse_edge:
 			self.clear_selection()
 		try:
-			cell = self.plane.cells[coord]
+			cell = self.renderer.plane.cells[coord]
 			if not cell.interacted:
 				if ctrl_held:
 					cell.selected = not cell.selected
@@ -63,9 +67,9 @@ class Game:
 
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
-		selected = [cell[()] for cell in self.plane.iterator() if cell[()].selected]
+		selected = [self.renderer.get_cell(cell[()]) for cell in self.renderer.plane.iterator() if cell[()].selected]
 		for cell in selected:
-			cell.data.set_guess(digit)
+			cell.set_guess(digit)
 
 	def mainloop(self) -> bool:
 		for event in pg.event.get():
@@ -99,7 +103,7 @@ def main():
 	font_size = 50
 	font = pg.font.SysFont('monospaced', font_size)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
-	grid = Grid(dimensions=3, regioning=regioning, rendering=rendering)
+	grid = Grid(3, regioning)
 	game = Game(grid, screen_size, rendering)
 	while game.mainloop():
 		pass

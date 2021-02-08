@@ -20,7 +20,13 @@ from pygame.font import Font
 from tuple_util import formula
 
 if TYPE_CHECKING:
-	from grid import Grid, Cell
+	from grid import (
+		Cell,
+		CellBase,
+		Coordinates,
+		Grid,
+		GridBase,
+	)
 
 Size = Union[int, Tuple[int, int]]
 
@@ -51,26 +57,136 @@ class Rendering:
 		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)
 
 
+class PencilMarks:
+
+	def __init__(self, size: Size):
+		self.center = Surface(size, flags=SRCALPHA)
+		self.corner = Surface(size, flags=SRCALPHA)
+
+
+class CellRenderer(CellBase):
+
+	def __init__(self, grid: GridRenderer):
+		super().__init__(grid)
+		self.interacted = False
+		self.selected = False
+		self.background = Surface(self.size, flags=SRCALPHA)
+		self.border = Surface(self.size, flags=SRCALPHA)
+		self.selection = Surface(self.size, flags=SRCALPHA)
+		self.value = Surface(self.size, flags=SRCALPHA)
+		self.pencil_marks = PencilMarks(self.size)
+		width = self.rendering.width
+		size = self.rendering.cell_size
+		pg.draw.rect(self.border, Colors.BLACK, (0, 0, size, size), width)
+		self.selection.fill(Colors.SELECTED)
+
+	@property
+	def renderer(self) -> Renderer:
+		return self.grid.renderer
+
+	@property
+	def rendering(self):
+		return self.renderer.rendering
+
+	@property
+	def cell(self) -> Cell:
+		return self.renderer.get_cell(self)
+
+	@property
+	def color(self) -> Colors:
+		return self.rendering.colors[int(self.cell.given)]
+
+	@property
+	def font(self) -> Font:
+		return self.rendering.font
+
+	@property
+	def size(self) -> Tuple[int, int]:
+		return self.rendering.size()
+
+	def render(self):
+		text = self.font.render(str(self.cell.value), 1, self.color)
+		self.value.fill(self.rendering.empty)
+		self.value.blit(text, (0, 0))
+		self.background.fill(Colors.WHITE)
+		surfs = [
+			self.border,
+			self.value,
+		]
+		if self.selected:
+			surfs.append(self.selection)
+		for s in surfs:
+			self.background.blit(s, (0, 0))
+
+
+class GridRenderer(GridBase):
+	class Clearable:
+		INTERACTIONS = 'interactions'
+		SELECTIONS = 'selections'
+
+		@staticmethod
+		def error(name):
+			ValueError(f'{name} must be one of GridRenderer.Clearable literals')
+
+	def __init__(
+			self,
+			size: int,
+			coordinates: Coordinates,
+			renderer: Renderer,
+	):
+		self.coordinates = coordinates
+		self.renderer = renderer
+		super().__init__(2, size, CellRenderer)
+		margin = self.renderer.grid.regioning.size(extra=(1, 1))
+		size_calc = self.renderer.rendering.size(self.size, margin=margin)
+		self.surface = Surface(size_calc, flags=SRCALPHA)
+
+	def clear(self, target: Clearable):
+		for cell in self.iterator():
+			if target is GridRenderer.Clearable.INTERACTIONS:
+				cell[()].interacted = False
+			elif target is GridRenderer.Clearable.SELECTIONS:
+				cell[()].selected = False
+			else:
+				raise GridRenderer.Clearable.error('target')
+
+
 class Renderer:
 
 	def __init__(
 			self,
 			grid: Grid,
+			coordinates: Coordinates,
 			screen_size: Union[Size, Sequence[int], None],
 			rendering: Rendering,
 	):
+		self.coordinates = coordinates
 		self.grid = grid
 		self.loaded = False
 		self.rendering = rendering
 		self.screen = None
 		self.size = screen_size
-		self.plane = None
+		self.plane = GridRenderer(self.grid.size, coordinates, self)
+
+	def get_cell(self, source: CellBase) -> CellBase:
+		grids = [self.grid, self.plane]
+		if isinstance(source, CellRenderer):
+			grids.reverse()
+		coord_0 = self.coordinates
+		coord_1 = grids[0].get_coordinates(source)
+		if isinstance(source, CellRenderer):
+			coord = *coord_0, *coord_1
+		else:
+			coord = list(coord_1)
+			del coord[0:len(coord_0)]
+			coord = tuple(coord)
+		return grids[1].cells[coord]
 
 	def tick(self):
 		size = self.rendering.size
 		for cell in self.plane.iterator():
-			cell[()].surfaces.render()
-		surfs = [(cell.surfaces.background, size(coord)) for coord, cell in self.plane.enumerator]
+			cell[()].render()
+		surfs = [(cell.background, size(coord)) for coord, cell in self.plane.enumerator]
 		self.plane.surface.blits(surfs, doreturn=False)
 		self.resize(self.size)
 
@@ -81,51 +197,3 @@ class Renderer:
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, (0, 0))
 		pg.display.flip()
-
-
-class PencilMarks:
-
-	def __init__(self, size: Size):
-		self.center = Surface(size, flags=SRCALPHA)
-		self.corner = Surface(size, flags=SRCALPHA)
-
-
-class Surfaces:
-
-	def __init__(self, cell: Cell):
-		self.cell = cell
-		self.background = Surface(self.size, flags=SRCALPHA)
-		self.border = Surface(self.size, flags=SRCALPHA)
-		self.selected = Surface(self.size, flags=SRCALPHA)
-		self.value = Surface(self.size, flags=SRCALPHA)
-		self.pencil_marks = PencilMarks(self.size)
-		width = self.cell.grid.rendering.width
-		size = self.cell.grid.rendering.cell_size
-		pg.draw.rect(self.border, Colors.BLACK, (0, 0, size, size), width)
-		self.selected.fill(Colors.SELECTED)
-
-	@property
-	def color(self) -> Colors:
-		return self.cell.grid.rendering.colors[int(self.cell.given)]
-
-	@property
-	def font(self) -> Font:
-		return self.cell.grid.rendering.font
-
-	@property
-	def size(self) -> Tuple[int, int]:
-		return self.cell.grid.rendering.size()
-
-	def render(self):
-		text = self.font.render(str(self.cell.value), 1, self.color)
-		self.value.fill(self.cell.grid.rendering.empty)
-		self.value.blit(text, (0, 0))
-		self.background.fill(Colors.WHITE)
-		surfs = [
-			self.border,
-			self.value,
-		]
-		if self.cell.selected:
-			surfs.append(self.selected)
-		for s in surfs:
-			self.background.blit(s, (0, 0))
