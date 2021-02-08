@@ -106,7 +106,7 @@ class Surfaces:
 
 	@property
 	def color(self) -> Colors:
-		return self.cell.grid.rendering.colors[int(self.cell.data.given)]
+		return self.cell.grid.rendering.colors[int(self.cell.given)]
 
 	@property
 	def font(self) -> Font:
@@ -117,7 +117,7 @@ class Surfaces:
 		return self.cell.grid.rendering.size()
 
 	def render(self):
-		text = self.font.render(str(self.cell.data.value), 1, self.color)
+		text = self.font.render(str(self.cell.value), 1, self.color)
 		self.value.fill(self.cell.grid.rendering.empty)
 		self.value.blit(text, (0, 0))
 		self.background.fill(Colors.WHITE)

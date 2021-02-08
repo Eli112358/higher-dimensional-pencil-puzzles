@@ -11,7 +11,6 @@ from typing import (
 import numpy as np
 from pygame import Surface, SRCALPHA
 
-from data import Data
 from rendering import Rendering, Surfaces
 from tuple_util import formula
 
@@ -80,10 +79,22 @@ class Cell:
 
 	def __init__(self, grid: Grid):
 		self.grid = grid
-		self.data = Data(self)
+		self.candidates = 0
+		self.contingencies = 0
+		self.given = False
+		self.region = None
+		self.value = ''
 		self.surfaces = Surfaces(self)
 		self.selected = False
 		self.interacted = False
+
+	def set_given(self, value: int):
+		self.value = value
+		self.given = value != ''
+
+	def set_guess(self, value: int):
+		if not self.given:
+			self.value = value
 
 
 class Grid:
