@@ -20,7 +20,11 @@ from tuple_util import formula
 
 class Game:
 
-	def __init__(self, grid: Grid, screen_size: Union[Size, Sequence[int], None]):
+	def __init__(
+			self,
+			grid: Grid,
+			screen_size: Union[Size, Sequence[int], None],
+	):
 		self.grid = grid
 		self.plane = self.grid.sub_grid([(0, 0)])
 		self.renderer = Renderer(self.plane, screen_size)
@@ -41,11 +45,11 @@ class Game:
 		shift_held = pg.key.get_mods() & pg.KMOD_SHIFT
 		size = self.plane.rendering.size()
 		width = self.plane.rendering.width
-		coords = formula(pos, size, width, lambda p, s, w: p // (s + w))
+		coord = formula(pos, size, width, lambda p, s, w: p // (s + w))
 		if not (ctrl_held or shift_held) and self.mouse_edge:
 			self.clear_selection()
 		try:
-			cell = self.plane.cells[coords]
+			cell = self.plane.cells[coord]
 			if not cell.interacted:
 				if ctrl_held:
 					cell.selected = not cell.selected

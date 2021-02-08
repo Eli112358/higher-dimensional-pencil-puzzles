@@ -4,6 +4,7 @@ from typing import (
 	Iterable,
 	List,
 	Optional,
+	TYPE_CHECKING,
 	Tuple,
 )
 
@@ -11,10 +12,13 @@ import numpy as np
 from pygame import Surface, SRCALPHA
 
 from data import Data
-from rendering import Rendering, Size, Surfaces
+from rendering import Rendering, Surfaces
 from tuple_util import formula
 
-Coordinate = Tuple[int, ...]
+if TYPE_CHECKING:
+	from rendering import Size
+
+Coordinates = Tuple[int, ...]
 Flags = Optional[Iterable[str]]
 
 
@@ -42,7 +46,12 @@ class CellBase:
 
 class GridBase:
 
-	def __init__(self, dimensions: int = 2, size: int = 9, cell_type: type = CellBase):
+	def __init__(
+			self,
+			dimensions: int = 2,
+			size: int = 9,
+			cell_type: type = CellBase,
+	):
 		self.dimensions = dimensions
 		self.size = size
 		self.cells = np.empty([self.size] * self.dimensions, cell_type)
@@ -53,7 +62,7 @@ class GridBase:
 	def enumerator(self):
 		return np.ndenumerate(self.cells)
 
-	def get_coordinates(self, target: CellBase) -> Coordinate:
+	def get_coordinates(self, target: CellBase) -> Coordinates:
 		for coordinates, cell in self.enumerator:
 			if cell == target:
 				return coordinates

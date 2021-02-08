@@ -34,20 +34,30 @@ class Colors:
 
 class Rendering:
 
-	def __init__(self, font: Font, colors: List[Colors or Tuple[int, int, int]], cell_size: int, width: int):
+	def __init__(
+			self,
+			font: Font,
+			colors: List[Colors or Tuple[int, int, int]],
+			cell_size: int,
+			width: int,
+	):
 		self.cell_size = cell_size
 		self.colors = colors
 		self.font = font
 		self.width = width
 		self.empty = Color(0, 0, 0, 0)
 
-	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> Size:
+	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> Tuple[int, int]:
 		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)
 
 
 class Renderer:
 
-	def __init__(self, plane: Grid, screen_size: Union[Size, Sequence[int], None]):
+	def __init__(
+			self,
+			plane: Grid,
+			screen_size: Union[Size, Sequence[int], None],
+	):
 		self.dirty = []
 		self.loaded = False
 		self.plane = plane
@@ -60,12 +70,12 @@ class Renderer:
 		size = self.plane.rendering.size
 		for cell in self.plane.iterator():
 			cell[()].surfaces.render()
-		surfs = [(cell.surfaces.background, size(coords)) for coords, cell in self.plane.enumerator]
+		surfs = [(cell.surfaces.background, size(coord)) for coord, cell in self.plane.enumerator]
 		self.plane.surface.blits(surfs, doreturn=False)
 		self.resize(self.size)
 		pg.display.flip()
 
-	def resize(self, new_size: Union[Size, Sequence[int]]):
+	def resize(self, new_size: Size):
 		if not self.loaded:
 			self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
 			self.loaded = True
