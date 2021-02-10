@@ -130,10 +130,8 @@ class GridRenderer(GridBase):
 	def __init__(
 			self,
 			size: int,
-			coordinates: Coordinates,
 			renderer: Renderer,
 	):
-		self.coordinates = coordinates
 		self.renderer = renderer
 		super().__init__(2, size, CellRenderer)
 		margin = self.renderer.grid.regioning.size(extra=(1, 1))
@@ -165,7 +163,7 @@ class Renderer:
 		self.rendering = rendering
 		self.screen = None
 		self.size = screen_size
-		self.plane = GridRenderer(self.grid.size, coordinates, self)
+		self.plane = GridRenderer(self.grid.size, self)
 		self.view = GridBase(2, self.grid.size, None)
 		self.set_view()
 
