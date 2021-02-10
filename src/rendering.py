@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import (
+	Callable,
 	List,
 	Sequence,
 	TYPE_CHECKING,
@@ -23,7 +24,6 @@ from tuple_util import formula
 if TYPE_CHECKING:
 	from grid import (
 		Cell,
-		Coordinates,
 		Grid,
 	)
 
@@ -148,23 +148,73 @@ class GridRenderer(GridBase):
 				raise GridRenderer.Clearable.error('target')
 
 
+class InputBox:
+	# Derived from the object-oriented variant at https://stackoverflow.com/a/46390412/2640292
+
+	def __init__(self, renderer: Renderer, rect: pg.Rect, callback: Callable, reset: bool = True, text: str = ''):
+		self.active = False
+		self.callback = callback
+		self.rect = rect
+		self.renderer = renderer
+		self.reset = reset
+		self.surface = pg.Surface((self.rect.w, self.rect.h))
+		self.text = text
+		self.txt_surface = self.font.render(self.text, True, Colors.BLACK)
+
+	@property
+	def color(self):
+		return Colors.PENCIL if self.active else Colors.BLACK
+
+	@property
+	def font(self):
+		return self.renderer.rendering.font
+
+	def handle_event(self, event):
+		if event.type == pg.MOUSEBUTTONDOWN:
+			if self.rect.collidepoint(event.pos):
+				self.active = not self.active
+			else:
+				self.active = False
+				self.callback(self.text)
+		if event.type == pg.KEYDOWN:
+			if self.active:
+				if event.key == pg.K_RETURN:
+					self.callback(self.text)
+					if self.reset:
+						self.text = ''
+				elif event.key == pg.K_BACKSPACE:
+					self.text = self.text[:-1]
+				elif event.key == pg.K_ESCAPE:
+					self.text = ''
+				else:
+					self.text += event.unicode
+
+	def draw(self, screen: Surface, font: Font):
+		self.txt_surface = font.render(self.text, True, Colors.BLACK)
+		self.rect.w = max(200, self.txt_surface.get_width() + 10)
+		screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
+		pg.draw.rect(screen, self.color, self.rect, 5)
+
+
 class Renderer:
 
 	def __init__(
 			self,
 			grid: Grid,
-			coordinates: Coordinates,
 			screen_size: Union[Size, Sequence[int], None],
 			rendering: Rendering,
 	):
-		self.coordinates = coordinates
+		self.coordinates = None
 		self.grid = grid
+		self.input_boxes = []
 		self.loaded = False
 		self.rendering = rendering
 		self.screen = None
 		self.size = screen_size
 		self.plane = GridRenderer(self.grid.size, self)
 		self.view = GridBase(2, self.grid.size, None)
+		rect = pg.Rect(50, self.plane.surface.get_height() + 20, 200, 50)
+		self.input_boxes.append(InputBox(self, rect, self.set_view, False, ''))
 		self.set_view()
 
 	def get_cell(self, source: CellBase) -> CellBase:
@@ -173,7 +223,12 @@ class Renderer:
 			grids.reverse()
 		return grids[1].cells[grids[0].get_coordinates(source)]
 
-	def set_view(self):
+	def set_view(self, s: str = ''):
+		if s == '':
+			c = [0] * (self.grid.dimensions - 2) + [-1, -1]
+			s = ','.join([str(x) for x in c])
+			self.input_boxes[0].text = s
+		self.coordinates = tuple([int(x) for x in s.split(',')])
 		axes = []
 		mapped = []
 		for i, c in self.coordinates:
@@ -197,4 +252,6 @@ class Renderer:
 			self.loaded = True
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, (0, 0))
+		for box in self.input_boxes:
+			box.draw(self.screen, self.rendering.font)
 		pg.display.flip()

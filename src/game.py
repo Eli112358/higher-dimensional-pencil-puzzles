@@ -33,8 +33,7 @@ class Game:
 			rendering: Rendering,
 	):
 		self.grid = grid
-		zeros = tuple([0] * (self.grid.dimensions - 2))
-		self.renderer = Renderer(self.grid, zeros, screen_size, rendering)
+		self.renderer = Renderer(self.grid, screen_size, rendering)
 		self.mouse_down = False
 		self.mouse_edge = False
 
@@ -81,6 +80,8 @@ class Game:
 			if event.type == KEYDOWN:
 				if event.key in number_keys:
 					self.enter_digit(event)
+			for box in self.renderer.input_boxes:
+				box.handle_event(event)
 		if self.mouse_down:
 			self.select_cell()
 		if not self.mouse_down and self.mouse_edge:
