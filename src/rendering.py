@@ -223,6 +223,9 @@ class Renderer:
 			grids.reverse()
 		return grids[1].cells[grids[0].get_coordinates(source)]
 
+	def get_selected(self):
+		return [self.get_cell(cell[()]) for cell in self.plane.iterator() if cell[()].selected]
+
 	def set_view(self, s: str = ''):
 		if s == '':
 			c = [0] * (self.grid.dimensions - 2) + [-1, -1]

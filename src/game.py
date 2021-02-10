@@ -37,6 +37,11 @@ class Game:
 		self.mouse_down = False
 		self.mouse_edge = False
 
+	def clear_cells(self):
+		selected = self.renderer.get_selected()
+		for cell in selected:
+			cell.set_guess('')
+
 	def select_cell(self):
 		pos = pg.mouse.get_pos()
 		ctrl_held = pg.key.get_mods() & pg.KMOD_CTRL
@@ -59,7 +64,7 @@ class Game:
 
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
-		selected = [self.renderer.get_cell(cell[()]) for cell in self.renderer.plane.iterator() if cell[()].selected]
+		selected = self.renderer.get_selected()
 		for cell in selected:
 			cell.set_guess(digit)
 
@@ -80,6 +85,8 @@ class Game:
 			if event.type == KEYDOWN:
 				if event.key in number_keys:
 					self.enter_digit(event)
+				elif event.key == pg.K_DELETE:
+					self.clear_cells()
 			for box in self.renderer.input_boxes:
 				box.handle_event(event)
 		if self.mouse_down:
