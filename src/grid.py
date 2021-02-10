@@ -5,6 +5,7 @@ from typing import (
 	Optional,
 	TYPE_CHECKING,
 	Tuple,
+	Union,
 )
 
 import numpy as np
@@ -46,13 +47,15 @@ class GridBase:
 			self,
 			dimensions: int = 2,
 			size: int = 9,
-			cell_type: type = CellBase,
+			cell_type: Union[type, None] = CellBase,
 	):
 		self.dimensions = dimensions
 		self.size = size
-		self.cells = np.empty([self.size] * self.dimensions, cell_type)
-		for cell in self.iterator(op_flags=['writeonly']):
-			cell[...] = cell_type(self)
+		self.cells = None
+		if cell_type is not None:
+			self.cells = np.empty([self.size] * self.dimensions, cell_type)
+			for cell in self.iterator(op_flags=['writeonly']):
+				cell[...] = cell_type(self)
 
 	@property
 	def enumerator(self):

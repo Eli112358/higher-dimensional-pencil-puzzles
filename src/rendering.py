@@ -166,20 +166,24 @@ class Renderer:
 		self.screen = None
 		self.size = screen_size
 		self.plane = GridRenderer(self.grid.size, coordinates, self)
+		self.view = GridBase(2, self.grid.size, None)
+		self.set_view()
 
 	def get_cell(self, source: CellBase) -> CellBase:
-		grids = [self.grid, self.plane]
+		grids = [self.view, self.plane]
 		if isinstance(source, CellRenderer):
 			grids.reverse()
-		coord_0 = self.coordinates
-		coord_1 = grids[0].get_coordinates(source)
-		if isinstance(source, CellRenderer):
-			coord = *coord_0, *coord_1
-		else:
-			coord = list(coord_1)
-			del coord[0:len(coord_0)]
-			coord = tuple(coord)
-		return grids[1].cells[coord]
+		return grids[1].cells[grids[0].get_coordinates(source)]
+
+	def set_view(self):
+		axes = []
+		mapped = []
+		for i, c in self.coordinates:
+			(mapped if c < 0 else axes).append(i)
+		coord = tuple([min(c, self.plane.size - 1) for c in self.coordinates if c > -1])
+		if len(mapped) != 2:
+			raise ValueError('coordinates must have exactly 2 "-1"s')
+		self.view.cells = self.grid.cells.transpose(axes + mapped)[coord]
 
 	def tick(self):
 		size = self.rendering.size
