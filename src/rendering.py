@@ -234,7 +234,7 @@ class Renderer:
 		self.coordinates = tuple([int(x) for x in s.split(',')])
 		axes = []
 		mapped = []
-		for i, c in self.coordinates:
+		for i, c in enumerate(self.coordinates):
 			(mapped if c < 0 else axes).append(i)
 		coord = tuple([min(c, self.plane.size - 1) for c in self.coordinates if c > -1])
 		if len(mapped) != 2:
