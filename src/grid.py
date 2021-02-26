@@ -10,7 +10,7 @@ from typing import (
 
 import numpy as np
 
-from tuple_util import formula
+from util.tuple import formula
 
 if TYPE_CHECKING:
 	from rendering import Size

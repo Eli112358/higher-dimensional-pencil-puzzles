@@ -16,12 +16,12 @@ from grid import Grid, Regioning
 from keys import number_keys
 from rendering import (
 	Colors,
-	GridRenderer,
-	Renderer,
 	Rendering,
 	Size,
 )
-from tuple_util import formula
+from rendering.renderer import Renderer
+from ui.grid import GridRenderer
+from util.tuple import formula
 
 
 class Game:
