@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import auto
 from typing import (
 	TYPE_CHECKING,
 	Tuple,
@@ -21,6 +22,7 @@ from rendering import (
 	Colors,
 	Size,
 )
+from util.enums import AutoName
 
 if TYPE_CHECKING:
 	from rendering.renderer import Renderer
@@ -89,12 +91,12 @@ class CellRenderer(CellBase):
 
 
 class GridRenderer(GridBase):
-	class Clearable:
-		INTERACTIONS = 'interactions'
-		SELECTIONS = 'selections'
+	class Clearable(str, AutoName):
+		INTERACTIONS = auto()
+		SELECTIONS = auto()
 
 		@staticmethod
-		def error(name):
+		def error(name: str):
 			ValueError(f'{name} must be one of GridRenderer.Clearable literals')
 
 	def __init__(
@@ -110,9 +112,9 @@ class GridRenderer(GridBase):
 
 	def clear(self, target: Clearable):
 		for cell in self.iterator():
-			if target is GridRenderer.Clearable.INTERACTIONS:
+			if target == GridRenderer.Clearable.INTERACTIONS:
 				cell[()].interacted = False
-			elif target is GridRenderer.Clearable.SELECTIONS:
+			elif target == GridRenderer.Clearable.SELECTIONS:
 				cell[()].selected = False
 			else:
 				raise GridRenderer.Clearable.error('target')

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import auto
 from typing import (
 	Iterable,
 	Optional,
@@ -10,6 +11,7 @@ from typing import (
 
 import numpy as np
 
+from util.enums import AutoName
 from util.tuple import formula
 
 if TYPE_CHECKING:
@@ -76,9 +78,11 @@ class GridBase:
 
 
 class Cell(CellBase):
-	class Field:
-		CANDIDATE = 'candidate'
-		CONTINGENCY = 'contingency'
+	class Field(str, AutoName):
+		CANDIDATE = auto()
+		COLOR = auto()
+		CONTINGENCY = auto()
+		GUESS = auto()
 
 		@staticmethod
 		def error(name):

@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import (
 	List,
 	Tuple,
@@ -12,7 +13,7 @@ from util.tuple import formula
 Size = Union[int, Tuple[int, int]]
 
 
-class Colors:
+class Colors(Color, Enum):
 	BLACK = (0, 0, 0)
 	PENCIL = (29, 106, 229)
 	SELECTED = (230, 217, 48, 128)
