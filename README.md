@@ -4,46 +4,8 @@ Navigate, solve, and assist in setting pencil puzzles that escape "[Flatland](ht
 Inspired by [Cracking the Cryptic](https://www.youtube.com/channel/UCC-UOdK8-mIjxBQm_ot1T-Q), and hope/plan to present to them to solve a puzzle or two
 
 ## Roadmap
-Note: I'm privileged to have a job during this pandemic, so my time is limited. Therefore, progress will be slow, so please bear with me.
 
- - Proof of concept with 4x4x4
- - Manually code solving algorithm from [Sudoku Wiki](https://www.sudokuwiki.org/sudoku.htm)
-   - Copyrighted and limited to 9x9
-   - Python
-   - Also use for setting assist
- - Continue to try larger 3-dimensional puzzles
-   - Eg. 6x6x6, 8x8x8, 9x9x9
- - Approximate minimum number of givens for a solution count of 1
-   - Add a single given at a time
-   - Once solution count gets close to 1, try adding different givens (try one, undo, try different one, undo, etc) 
-   - (essentially trial and error)
- - Is 4D (9x9x9x9) even possible?
- - Web interface for manual solving
-   - This is what I hope and plan to present to Simon and Mark
-   - Preferably similar to their web app
-   - With pause button that stops the clock and hides the puzzle; for when you get interrupted
-   - Only view a single 2D puzzle at once (eg, 9x9)
-   - Additional controls for navigating the other dimensions
-     - Translate
-     - Rotate (like [Miegakure](https://miegakure.com), specifically [this clip](https://youtu.be/9yW--eQaA2I?t=43))
-   - Coordinates of currently viewing plane should be shown somewhere on screen
-     - Maybe add an option to enable/disable
-   - Add option for coordinate system
-     - Letter/Number
-     - rYcX
- - Allow others to implement variants; specifically for, but not limited to setting assist; examples:
-   - Chess
-   - Killer
-   - Non-consecutive
-   - Sandwich
-   - Thermo
- - Support other pencil puzzles; examples:
-   - Akari
-   - Fillomino
-   - LITS
-   - Pentominous
-   - Siltherlink
-   - Yajilin
+> Moved to [TODO.md]()
 
 ## Concept
 Imagine 9 (valid, solved) standard sudokus stacked on top of each other. Every plane should itself be a valid, solved 9x9 sudoku.
