@@ -105,14 +105,14 @@ class Cell(CellBase):
 			self.value = value
 
 	def is_set(self, digit: int, field: Field):
-		_field = self.candidates if field is Cell.Field.CANDIDATE else self.contingencies
+		_field = self.candidates if field == Cell.Field.CANDIDATE else self.contingencies
 		return _field & (1 << digit)
 
 	def set(self, digit: int, field: Field):
 		bit = 1 << digit
-		if field is Cell.Field.CANDIDATE:
+		if field == Cell.Field.CANDIDATE:
 			self.candidates &= bit
-		elif field is Cell.Field.CONTINGENCY:
+		elif field == Cell.Field.CONTINGENCY:
 			self.contingencies &= bit
 		else:
 			raise Cell.Field.error('field')
@@ -123,9 +123,9 @@ class Cell(CellBase):
 
 	def toggle(self, digit: int, field: Field):
 		bit = 1 << digit
-		if field is Cell.Field.CANDIDATE:
+		if field == Cell.Field.CANDIDATE:
 			self.candidates ^= bit
-		elif field is Cell.Field.CONTINGENCY:
+		elif field == Cell.Field.CONTINGENCY:
 			self.contingencies ^= bit
 		else:
 			raise Cell.Field.error('field')
