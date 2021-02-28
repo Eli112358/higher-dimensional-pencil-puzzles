@@ -13,7 +13,7 @@ from pygame import (
 )
 from pygame.font import Font
 
-from grid import (
+from src.grid import (
 	Cell,
 	CellBase,
 	GridBase,

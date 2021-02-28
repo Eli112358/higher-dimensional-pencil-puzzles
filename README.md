@@ -5,7 +5,7 @@ Inspired by [Cracking the Cryptic](https://www.youtube.com/channel/UCC-UOdK8-mIj
 
 ## Roadmap
 
-> Moved to [TODO.md]()
+> Moved to [TODO.md](./TODO.md)
 
 ## Concept
 Imagine 9 (valid, solved) standard sudokus stacked on top of each other. Every plane should itself be a valid, solved 9x9 sudoku.
