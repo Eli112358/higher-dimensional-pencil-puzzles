@@ -14,7 +14,7 @@ class Center(str, Enum):
 	VERTICAL = 'left'
 
 
-def center(source: Surface, dest: Surface, axes: Optional[Center]) -> Rect:
+def center(source: Surface, dest: Surface, axes: Optional[Center] = None) -> Rect:
 	rect = source.get_rect()
 	rect.center = dest.get_rect().center
 	if axes is not None:
@@ -22,7 +22,7 @@ def center(source: Surface, dest: Surface, axes: Optional[Center]) -> Rect:
 	return rect
 
 
-def blit_center(source: Surface, dest: Surface, axes: Optional[Center]):
+def blit_center(source: Surface, dest: Surface, axes: Optional[Center] = None):
 	dest.blit(source, center(source, dest, axes))
 
 
