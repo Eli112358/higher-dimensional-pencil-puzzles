@@ -44,7 +44,7 @@ class Renderer:
 		self.screen = None
 		self.size = screen_size
 		self.plane = GridRenderer(self, (20, 20), self.grid.size)
-		self.view = GridBase(2, self.grid.size, None)
+		self.view = GridBase(2, self.grid.size)
 		rect = Rect(50, self.plane.rect.bottom + 20, 200, 50)
 		self.input_boxes.append(InputBox(self, rect, self.set_view, False))
 		self.set_view()

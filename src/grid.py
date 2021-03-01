@@ -53,9 +53,9 @@ class GridBase:
 
 	def __init__(
 			self,
-			dimensions: int = 2,
-			size: int = 9,
-			cell_type: Union[type, None] = CellBase,
+			dimensions: int,
+			size: int,
+			cell_type: Union[type, None] = None,
 	):
 		self.dimensions = dimensions
 		self.size = size
