@@ -3,7 +3,10 @@ from typing import (
 	Union,
 )
 
-import pygame as pg
+from pygame import (
+	Rect,
+	display,
+)
 from pygame.constants import RESIZABLE
 
 from grid import (
@@ -37,8 +40,8 @@ class Renderer:
 		self.size = screen_size
 		self.plane = GridRenderer(self.grid.size, self)
 		self.view = GridBase(2, self.grid.size, None)
-		rect = pg.Rect(50, self.plane.surface.get_height() + 20, 200, 50)
-		self.input_boxes.append(InputBox(self, rect, self.set_view, False, ''))
+		rect = Rect(50, self.plane.surface.get_height() + 20, 200, 50)
+		self.input_boxes.append(InputBox(self, rect, self.set_view, False))
 		self.set_view()
 
 	def get_cell(self, source: CellBase) -> CellBase:
@@ -75,10 +78,10 @@ class Renderer:
 
 	def resize(self, new_size: Size):
 		if not self.loaded:
-			self.screen = pg.display.set_mode(size=new_size, flags=RESIZABLE)
+			self.screen = display.set_mode(size=new_size, flags=RESIZABLE)
 			self.loaded = True
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, (0, 0))
 		for box in self.input_boxes:
 			box.draw(self.screen, self.rendering.font)
-		pg.display.flip()
+		display.flip()

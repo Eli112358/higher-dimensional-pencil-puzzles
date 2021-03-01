@@ -2,15 +2,22 @@ from __future__ import annotations
 
 from typing import Sequence, Union
 
-import pygame as pg
-from pygame.event import Event
-from pygame.locals import (
+from pygame import (
 	KEYDOWN,
+	KMOD_CTRL,
+	KMOD_SHIFT,
+	K_DELETE,
 	MOUSEBUTTONDOWN,
 	MOUSEBUTTONUP,
 	QUIT,
 	VIDEORESIZE,
+	event as events,
+	font as fonts,
+	init as init_game,
 )
+from pygame.event import Event
+from pygame.key import get_mods as get_mod_keys
+from pygame.mixer_music import get_pos as get_mouse_pos
 
 from grid import Grid, Regioning
 from keys import number_keys
@@ -43,9 +50,9 @@ class Game:
 			cell.set_guess('')
 
 	def select_cell(self):
-		pos = pg.mouse.get_pos()
-		ctrl_held = pg.key.get_mods() & pg.KMOD_CTRL
-		shift_held = pg.key.get_mods() & pg.KMOD_SHIFT
+		pos = get_mouse_pos()
+		ctrl_held = get_mod_keys() & KMOD_CTRL
+		shift_held = get_mod_keys() & KMOD_SHIFT
 		size = self.renderer.rendering.size()
 		coord = formula(pos, size, 0, lambda p, s, w: p // (s + w))
 		if not (ctrl_held or shift_held) and self.mouse_edge:
@@ -69,7 +76,7 @@ class Game:
 			cell.set_guess(digit)
 
 	def mainloop(self) -> bool:
-		for event in pg.event.get():
+		for event in events.get():
 			if event.type == QUIT:
 				return False
 			if event.type == VIDEORESIZE:
@@ -85,7 +92,7 @@ class Game:
 			if event.type == KEYDOWN:
 				if event.key in number_keys:
 					self.enter_digit(event)
-				elif event.key == pg.K_DELETE:
+				elif event.key == K_DELETE:
 					self.clear_cells()
 			for box in self.renderer.input_boxes:
 				box.handle_event(event)
@@ -98,11 +105,11 @@ class Game:
 
 
 def main():
-	pg.init()
+	init_game()
 	regioning = Regioning(False, size=(2, 2))
 	screen_size = (500, 500)
 	font_size = 50
-	font = pg.font.SysFont('monospaced', font_size)
+	font = fonts.SysFont('monospaced', font_size)
 	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
 	grid = Grid(3, regioning)
 	game = Game(grid, screen_size, rendering)

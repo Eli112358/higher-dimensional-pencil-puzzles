@@ -6,10 +6,10 @@ from typing import (
 	Tuple,
 )
 
-import pygame as pg
 from pygame import (
 	SRCALPHA,
 	Surface,
+	draw as drawing,
 )
 from pygame.font import Font
 
@@ -48,7 +48,7 @@ class CellRenderer(CellBase):
 		self.pencil_marks = PencilMarks(self.size)
 		width = self.rendering.width
 		size = self.rendering.cell_size
-		pg.draw.rect(self.border, Colors.BLACK, (0, 0, size, size), width)
+		drawing.rect(self.border, Colors.BLACK, (0, 0, size, size), width)
 		self.selection.fill(Colors.SELECTED)
 
 	@property

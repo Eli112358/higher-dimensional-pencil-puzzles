@@ -8,8 +8,18 @@ from typing import (
 	TYPE_CHECKING,
 )
 
-import pygame as pg
-from pygame import Color, Surface
+from pygame import (
+	Color,
+	KEYDOWN,
+	K_BACKSPACE,
+	K_ESCAPE,
+	K_KP_ENTER,
+	K_RETURN,
+	MOUSEBUTTONDOWN,
+	Rect,
+	Surface,
+	draw as drawing,
+)
 from pygame.event import Event
 
 from rendering import Colors
@@ -30,7 +40,7 @@ class Button:
 			self,
 			renderer: Renderer,
 			name: str,
-			rect: pg.Rect,
+			rect: Rect,
 			graphic: Surface,
 			callback: Optional[Callable] = None,
 			btn_type: Optional[Type] = Type.SIMPLE,
@@ -54,7 +64,7 @@ class Button:
 		background.fill(self.color)
 		blit_center(self.graphic, background)
 		screen.blit(background, self.rect.topleft)
-		pg.draw.rect(screen, Colors.BLACK, self.rect, 3)
+		drawing.rect(screen, Colors.BLACK, self.rect, 3)
 
 	def enable(self):
 		for btn in self.get_group():
@@ -65,7 +75,7 @@ class Button:
 		return [btn for btn in self.renderer.buttons if btn.group is self.group]
 
 	def handle_event(self, event: Event):
-		if event.type == pg.MOUSEBUTTONDOWN:
+		if event.type == MOUSEBUTTONDOWN:
 			if self.rect.collidepoint(event.pos):
 				if self.type == Button.Type.TOGGLE:
 					self.enabled = not self.enabled
@@ -81,7 +91,7 @@ class InputBox:
 	def __init__(
 			self,
 			renderer: Renderer,
-			rect: pg.Rect,
+			rect: Rect,
 			callback: Optional[Callable] = None,
 			reset: Optional[bool] = True,
 			text: Optional[str] = '',
@@ -91,7 +101,7 @@ class InputBox:
 		self.rect = rect
 		self.renderer = renderer
 		self.reset = reset
-		self.surface = pg.Surface((self.rect.w, self.rect.h))
+		self.surface = Surface((self.rect.w, self.rect.h))
 		self.text = text
 
 	@property
@@ -109,26 +119,26 @@ class InputBox:
 		background.fill(self.color)
 		background.blit(txt_surface, (5, 5))
 		screen.blit(background, self.rect.topleft)
-		pg.draw.rect(screen, Colors.BLACK, self.rect, 5)
+		drawing.rect(screen, Colors.BLACK, self.rect, 5)
 
 	def handle_event(self, event: Event):
-		if event.type == pg.MOUSEBUTTONDOWN:
+		if event.type == MOUSEBUTTONDOWN:
 			if self.rect.collidepoint(event.pos):
 				self.active = not self.active
 			else:
 				self.active = False
 				if self.callback is not None:
 					self.callback(self.text)
-		if event.type == pg.KEYDOWN:
+		if event.type == KEYDOWN:
 			if self.active:
-				if event.key in [pg.K_RETURN, pg.K_KP_ENTER]:
+				if event.key in [K_RETURN, K_KP_ENTER]:
 					self.callback(self.text)
 					if self.reset:
 						self.text = ''
 					self.active = False
-				elif event.key == pg.K_BACKSPACE:
+				elif event.key == K_BACKSPACE:
 					self.text = self.text[:-1]
-				elif event.key == pg.K_ESCAPE:
+				elif event.key == K_ESCAPE:
 					self.text = ''
 				else:
 					self.text += event.unicode

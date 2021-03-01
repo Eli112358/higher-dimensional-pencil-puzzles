@@ -9,7 +9,11 @@ from typing import (
 	Union,
 )
 
-import numpy as np
+from numpy import (
+	empty,
+	ndenumerate,
+	nditer,
+)
 
 from util.enums import AutoName
 from util.tuple import formula
@@ -55,13 +59,13 @@ class GridBase:
 		self.size = size
 		self.cells = None
 		if cell_type is not None:
-			self.cells = np.empty([self.size] * self.dimensions, cell_type)
+			self.cells = empty([self.size] * self.dimensions, cell_type)
 			for cell in self.iterator(op_flags=['writeonly']):
 				cell[...] = cell_type(self)
 
 	@property
 	def enumerator(self):
-		return np.ndenumerate(self.cells)
+		return ndenumerate(self.cells)
 
 	def get_coordinates(self, target: CellBase) -> Coordinates:
 		for coordinates, cell in self.enumerator:
@@ -69,12 +73,12 @@ class GridBase:
 				return coordinates
 		raise KeyError('target cell is not in grid')
 
-	def iterator(self, flags: Flags = None, op_flags: Flags = None) -> np.nditer:
+	def iterator(self, flags: Flags = None, op_flags: Flags = None) -> nditer:
 		if flags is None:
 			flags = ['refs_ok']
 		if op_flags is None:
 			op_flags = ['readonly']
-		return np.nditer(self.cells, flags=flags, op_flags=op_flags)
+		return nditer(self.cells, flags=flags, op_flags=op_flags)
 
 
 class Cell(CellBase):
