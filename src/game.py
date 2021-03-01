@@ -14,7 +14,7 @@ from pygame import (
 )
 from pygame.event import Event
 from pygame.key import get_mods as get_mod_keys
-from pygame.mixer_music import get_pos as get_mouse_pos
+from pygame.mouse import get_pos as get_mouse_pos
 
 from grid import Grid, Regioning
 from keys import number_keys
