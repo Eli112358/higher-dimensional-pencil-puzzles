@@ -106,7 +106,7 @@ class InputBox:
 
 	@property
 	def color(self):
-		return Colors.PENCIL if self.active else Colors.BLACK
+		return Colors.SELECTED if self.active else Colors.WHITE
 
 	@property
 	def font(self) -> str:
