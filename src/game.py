@@ -51,7 +51,8 @@ class Game:
 		ctrl_held = get_mod_keys() & KMOD_CTRL
 		shift_held = get_mod_keys() & KMOD_SHIFT
 		size = self.renderer.rendering.size()
-		coord = formula(pos, size, 0, lambda p, s, w: p // (s + w))
+		topleft = self.renderer.plane.rect.topleft
+		coord = formula(pos, size, topleft, lambda p, s, f: (p - f) // s)
 		if not (ctrl_held or shift_held) and self.mouse_edge:
 			self.renderer.plane.clear(GridRenderer.Clearable.SELECTIONS)
 		try:
@@ -91,6 +92,8 @@ class Game:
 					self.enter_digit(event)
 				elif event.key == K_DELETE:
 					self.clear_cells()
+			for btn in self.renderer.buttons:
+				btn.handle_event(event)
 			for box in self.renderer.input_boxes:
 				box.handle_event(event)
 		if self.mouse_down:

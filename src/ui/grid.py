@@ -7,6 +7,7 @@ from typing import (
 )
 
 from pygame import (
+	Rect,
 	SRCALPHA,
 	Surface,
 	draw as drawing,
@@ -101,14 +102,17 @@ class GridRenderer(GridBase):
 
 	def __init__(
 			self,
-			size: int,
 			renderer: Renderer,
+			top_left: Tuple[int, int],
+			size: int,
 	):
 		self.renderer = renderer
 		super().__init__(2, size, CellRenderer)
 		margin = self.renderer.grid.regioning.size(extra=(1, 1))
 		size_calc = self.renderer.rendering.size(self.size, margin=margin)
 		self.surface = Surface(size_calc, flags=SRCALPHA)
+		x, y, l, w = top_left + size_calc
+		self.rect = Rect(x, y, w + x, l + y)
 
 	def clear(self, target: Clearable):
 		for cell in self.iterator():
