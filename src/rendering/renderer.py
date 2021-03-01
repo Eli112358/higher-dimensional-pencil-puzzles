@@ -123,6 +123,7 @@ class Renderer:
 		for cell in self.plane.iterator():
 			cell[()].render()
 		surfs = [(cell.background, size(coord)) for coord, cell in self.plane.enumerator]
+		self.plane.surface.fill(Colors.WHITE)
 		self.plane.surface.blits(surfs, doreturn=False)
 		self.resize(self.size)
 
