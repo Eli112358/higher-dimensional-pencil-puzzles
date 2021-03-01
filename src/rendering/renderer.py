@@ -107,17 +107,15 @@ class Renderer:
 
 	def set_view(self, s: str = ''):
 		if s == '':
-			c = [0] * (self.grid.dimensions - 2) + [-1, -1]
-			s = ','.join([str(x) for x in c])
+			s = '0,' * (self.grid.dimensions - 2) + '*,*'
 			self.input_boxes[0].text = s
-		self.coordinates = tuple([int(x) for x in s.split(',')])
-		axes = []
-		mapped = []
+		self.coordinates = tuple([int(x) for x in s.replace('*', '-1').split(',')])
+		axes, mapped = [], []
 		for i, c in enumerate(self.coordinates):
 			(mapped if c < 0 else axes).append(i)
 		coord = tuple([min(c, self.plane.size - 1) for c in self.coordinates if c > -1])
 		if len(mapped) != 2:
-			raise ValueError('coordinates must have exactly 2 "-1"s')
+			raise ValueError('coordinates must have exactly 2 "*"s')
 		self.view.cells = self.grid.cells.transpose(axes + mapped)[coord]
 
 	def tick(self):
