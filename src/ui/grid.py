@@ -9,6 +9,7 @@ from typing import (
 )
 
 from pygame import (
+	Color,
 	Rect,
 	SRCALPHA,
 	Surface,
@@ -108,7 +109,7 @@ class CellRenderer(CellBase):
 		return self.renderer.get_cell(self)
 
 	@property
-	def color(self) -> Colors:
+	def color(self) -> Color:
 		return self.rendering.colors[int(self.cell.given)]
 
 	@property

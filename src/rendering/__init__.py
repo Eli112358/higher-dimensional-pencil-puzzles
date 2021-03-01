@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import (
-	List,
+	Sequence,
 	Tuple,
 	Union,
 )
@@ -25,7 +25,7 @@ class Rendering:
 	def __init__(
 			self,
 			font: str,
-			colors: List[Colors or Tuple[int, int, int]],
+			colors: Sequence[Colors or Tuple[int, int, int]],
 			cell_size: int,
 			width: int,
 	):
