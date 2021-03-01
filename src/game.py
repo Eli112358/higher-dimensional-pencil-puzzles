@@ -12,7 +12,6 @@ from pygame import (
 	QUIT,
 	VIDEORESIZE,
 	event as events,
-	font as fonts,
 	init as init_game,
 )
 from pygame.event import Event
@@ -108,9 +107,7 @@ def main():
 	init_game()
 	regioning = Regioning(False, size=(2, 2))
 	screen_size = (500, 500)
-	font_size = 50
-	font = fonts.SysFont('monospaced', font_size)
-	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
+	rendering = Rendering('monospaced', [Colors.PENCIL, Colors.BLACK], 50, 3)
 	grid = Grid(3, regioning)
 	game = Game(grid, screen_size, rendering)
 	while game.mainloop():

@@ -109,7 +109,7 @@ class InputBox:
 		return Colors.PENCIL if self.active else Colors.BLACK
 
 	@property
-	def font(self):
+	def font(self) -> str:
 		return self.renderer.rendering.font
 
 	def draw(self, screen: Surface, font: str):

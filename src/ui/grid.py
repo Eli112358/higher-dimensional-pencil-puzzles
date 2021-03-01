@@ -11,16 +11,16 @@ from pygame import (
 	Surface,
 	draw as drawing,
 )
-from pygame.font import Font
 
+from rendering import (
+	Colors,
+	Size,
+)
+from rendering.graphics import render_text
 from src.grid import (
 	Cell,
 	CellBase,
 	GridBase,
-)
-from rendering import (
-	Colors,
-	Size,
 )
 from util.enums import AutoName
 
@@ -68,7 +68,7 @@ class CellRenderer(CellBase):
 		return self.rendering.colors[int(self.cell.given)]
 
 	@property
-	def font(self) -> Font:
+	def font(self) -> str:
 		return self.rendering.font
 
 	@property
@@ -76,7 +76,7 @@ class CellRenderer(CellBase):
 		return self.rendering.size()
 
 	def render(self):
-		text = self.font.render(str(self.cell.value), 1, self.color)
+		text = render_text(self.font, str(self.cell.value), 50, self.color)
 		self.value.fill(self.rendering.empty)
 		self.value.blit(text, (0, 0))
 		self.background.fill(Colors.WHITE)

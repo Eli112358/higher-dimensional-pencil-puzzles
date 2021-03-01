@@ -6,7 +6,6 @@ from typing import (
 )
 
 from pygame import Color
-from pygame.font import Font
 
 from util.tuple import formula
 
@@ -24,7 +23,7 @@ class Rendering:
 
 	def __init__(
 			self,
-			font: Font,
+			font: str,
 			colors: List[Colors or Tuple[int, int, int]],
 			cell_size: int,
 			width: int,
