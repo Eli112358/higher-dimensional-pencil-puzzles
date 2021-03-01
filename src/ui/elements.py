@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from typing import (
 	Callable,
+	Optional,
 	TYPE_CHECKING,
 )
 
 import pygame as pg
 from pygame import Surface
-from pygame.font import Font
+from pygame.event import Event
 
 from rendering import Colors
+from rendering.graphics import render_text
 
 if TYPE_CHECKING:
 	from rendering.renderer import Renderer
@@ -22,9 +24,9 @@ class InputBox:
 			self,
 			renderer: Renderer,
 			rect: pg.Rect,
-			callback: Callable,
-			reset: bool = True,
-			text: str = '',
+			callback: Optional[Callable] = None,
+			reset: Optional[bool] = True,
+			text: Optional[str] = '',
 	):
 		self.active = False
 		self.callback = callback
@@ -33,7 +35,6 @@ class InputBox:
 		self.reset = reset
 		self.surface = pg.Surface((self.rect.w, self.rect.h))
 		self.text = text
-		self.txt_surface = self.font.render(self.text, True, Colors.BLACK)
 
 	@property
 	def color(self):
@@ -43,28 +44,33 @@ class InputBox:
 	def font(self):
 		return self.renderer.rendering.font
 
-	def handle_event(self, event):
+	def draw(self, screen: Surface, font: str):
+		txt_surface = render_text(font, self.text, 50, Colors.BLACK)
+		self.rect.w = max(200, txt_surface.get_width() + 10)
+		background = Surface(self.rect.size)
+		background.fill(self.color)
+		background.blit(txt_surface, (5, 5))
+		screen.blit(background, self.rect.topleft)
+		pg.draw.rect(screen, Colors.BLACK, self.rect, 5)
+
+	def handle_event(self, event: Event):
 		if event.type == pg.MOUSEBUTTONDOWN:
 			if self.rect.collidepoint(event.pos):
 				self.active = not self.active
 			else:
 				self.active = False
-				self.callback(self.text)
+				if self.callback is not None:
+					self.callback(self.text)
 		if event.type == pg.KEYDOWN:
 			if self.active:
-				if event.key == pg.K_RETURN:
+				if event.key in [pg.K_RETURN, pg.K_KP_ENTER]:
 					self.callback(self.text)
 					if self.reset:
 						self.text = ''
+					self.active = False
 				elif event.key == pg.K_BACKSPACE:
 					self.text = self.text[:-1]
 				elif event.key == pg.K_ESCAPE:
 					self.text = ''
 				else:
 					self.text += event.unicode
-
-	def draw(self, screen: Surface, font: Font):
-		self.txt_surface = font.render(self.text, True, Colors.BLACK)
-		self.rect.w = max(200, self.txt_surface.get_width() + 10)
-		screen.blit(self.txt_surface, (self.rect.x+5, self.rect.y+5))
-		pg.draw.rect(screen, self.color, self.rect, 5)
