@@ -97,6 +97,7 @@ class Cell(CellBase):
 	def __init__(self, grid: Grid):
 		super().__init__(grid)
 		self.candidates = 0
+		self.color = 0
 		self.contingencies = 0
 		self.given = False
 		self.region = None
@@ -117,6 +118,18 @@ class Cell(CellBase):
 	def convert(self, field: Field) -> Sequence[int]:
 		return [n for n in range(len(number_keys)//2) if self.is_set(n, field)]
 
+	def clear(self):
+		if self.given:
+			return
+		if self.value != '':
+			self.value = ''
+		elif self.color > 0:
+			self.color = 0
+		elif self.contingencies > 0:
+			self.contingencies = 0
+		elif self.candidates > 0:
+			self.candidates = 0
+
 	def set(self, digit: int, field: Field):
 		bit = 1 << digit
 		if field == Cell.Field.GUESS:
@@ -130,10 +143,6 @@ class Cell(CellBase):
 			pass
 		else:
 			raise Cell.Field.error('field')
-
-	def clear(self, digit: int, field: Field):
-		if self.is_set(digit, field):
-			self.toggle(digit, field)
 
 	def toggle(self, digit: int, field: Field):
 		bit = 1 << digit
