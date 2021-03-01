@@ -55,7 +55,7 @@ class GridBase:
 			self,
 			dimensions: int,
 			size: int,
-			cell_type: Union[type, None] = None,
+			cell_type: Optional[type] = None,
 	):
 		self.dimensions = dimensions
 		self.size = size
