@@ -83,6 +83,7 @@ class CellRenderer(CellBase):
 
 	def __init__(self, grid: GridRenderer):
 		super().__init__(grid)
+		self.colors = [Colors.PENCIL, Colors.BLACK]
 		self.interacted = False
 		self.selected = False
 		self.background = Surface(self.size, flags=SRCALPHA)
@@ -110,7 +111,7 @@ class CellRenderer(CellBase):
 
 	@property
 	def color(self) -> Color:
-		return self.rendering.colors[int(self.cell.given)]
+		return self.colors[int(self.cell.given)]
 
 	@property
 	def font(self) -> str:

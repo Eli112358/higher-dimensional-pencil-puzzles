@@ -25,12 +25,10 @@ class Rendering:
 	def __init__(
 			self,
 			font: str,
-			colors: Sequence[Color or Tuple[int, int, int]],
 			cell_size: int,
 			width: int,
 	):
 		self.cell_size = cell_size
-		self.colors = colors
 		self.font = font
 		self.width = width
 

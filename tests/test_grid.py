@@ -13,7 +13,7 @@ class TestGrid(unittest.TestCase):
 	region_data = Regioning()
 	region_data._size = (2, 2)
 	font = pg.font.SysFont('monospaced', 15)
-	rendering = Rendering(font, [Colors.PENCIL, Colors.BLACK], 50, 3)
+	rendering = Rendering(font, 50, 3)
 	grid = Grid(dimensions=3, regioning=region_data)
 
 	def test_dimensions(self):
