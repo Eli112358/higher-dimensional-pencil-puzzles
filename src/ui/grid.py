@@ -17,6 +17,7 @@ from pygame import (
 
 from rendering import (
 	Colors,
+	Rendering,
 	Size,
 )
 from rendering.graphics import (
@@ -95,10 +96,11 @@ class CellRenderer(CellBase):
 
 	@property
 	def renderer(self) -> Renderer:
+		self.grid: GridRenderer
 		return self.grid.renderer
 
 	@property
-	def rendering(self):
+	def rendering(self) -> Rendering:
 		return self.renderer.rendering
 
 	@property
