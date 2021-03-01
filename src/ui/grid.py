@@ -170,3 +170,11 @@ class GridRenderer(GridBase):
 				cell[()].selected = False
 			else:
 				raise GridRenderer.Clearable.error('target')
+
+	def render(self):
+		for cell in self.iterator():
+			cell[()].render()
+		size = self.renderer.rendering.size
+		surfs = [(cell.background, size(coord)) for coord, cell in self.enumerator]
+		self.surface.fill(Colors.WHITE)
+		self.surface.blits(surfs, doreturn=False)

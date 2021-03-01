@@ -121,12 +121,7 @@ class Renderer:
 		self.view.cells = self.grid.cells.transpose(axes + mapped)[coord]
 
 	def tick(self):
-		size = self.rendering.size
-		for cell in self.plane.iterator():
-			cell[()].render()
-		surfs = [(cell.background, size(coord)) for coord, cell in self.plane.enumerator]
-		self.plane.surface.fill(Colors.WHITE)
-		self.plane.surface.blits(surfs, doreturn=False)
+		self.plane.render()
 		self.resize(self.size)
 
 	def resize(self, new_size: Size):
