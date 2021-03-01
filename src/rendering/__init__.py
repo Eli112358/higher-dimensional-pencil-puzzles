@@ -25,7 +25,7 @@ class Rendering:
 	def __init__(
 			self,
 			font: str,
-			colors: Sequence[Colors or Tuple[int, int, int]],
+			colors: Sequence[Color or Tuple[int, int, int]],
 			cell_size: int,
 			width: int,
 	):
