@@ -14,6 +14,7 @@ Size = Union[int, Tuple[int, int]]
 
 class Colors(Color, Enum):
 	BLACK = (0, 0, 0)
+	EMPTY = (0, 0, 0, 0)
 	PENCIL = (29, 106, 229)
 	SELECTED = (230, 217, 48, 128)
 	WHITE = (255, 255, 255)
@@ -32,7 +33,6 @@ class Rendering:
 		self.colors = colors
 		self.font = font
 		self.width = width
-		self.empty = Color(0, 0, 0, 0)
 
 	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> Tuple[int, int]:
 		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)

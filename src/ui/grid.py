@@ -78,7 +78,7 @@ class CellRenderer(CellBase):
 
 	def render(self):
 		text = render_text(self.font, str(self.cell.value), 50, self.color)
-		self.value.fill(self.rendering.empty)
+		self.value.fill(Colors.EMPTY)
 		self.value.blit(text, (0, 0))
 		self.background.fill(Colors.WHITE)
 		surfs = [
