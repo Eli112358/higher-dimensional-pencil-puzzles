@@ -1,20 +1,78 @@
 from __future__ import annotations
 
+from enum import auto
 from typing import (
 	Callable,
 	Optional,
+	Sequence,
 	TYPE_CHECKING,
 )
 
 import pygame as pg
-from pygame import Surface
+from pygame import Color, Surface
 from pygame.event import Event
 
 from rendering import Colors
-from rendering.graphics import render_text
+from rendering.graphics import blit_center, render_text
+from util.enums import AutoName
 
 if TYPE_CHECKING:
 	from rendering.renderer import Renderer
+
+
+class Button:
+	class Type(str, AutoName):
+		RADIO = auto()
+		SIMPLE = auto()
+		TOGGLE = auto()
+
+	def __init__(
+			self,
+			renderer: Renderer,
+			name: str,
+			rect: pg.Rect,
+			graphic: Surface,
+			callback: Optional[Callable] = None,
+			btn_type: Optional[Type] = Type.SIMPLE,
+			group: Optional[str] = '',
+	):
+		self.callback = callback
+		self.enabled = False
+		self.graphic = graphic
+		self.group = group
+		self.name = name
+		self.rect = rect
+		self.renderer = renderer
+		self.type = btn_type
+
+	@property
+	def color(self) -> Color:
+		return Colors.SELECTED if self.enabled else Colors.WHITE
+
+	def draw(self, screen: Surface):
+		background = Surface(self.rect.size)
+		background.fill(self.color)
+		blit_center(self.graphic, background)
+		screen.blit(background, self.rect.topleft)
+		pg.draw.rect(screen, Colors.BLACK, self.rect, 3)
+
+	def enable(self):
+		for btn in self.get_group():
+			btn.enabled = False
+		self.enabled = True
+
+	def get_group(self) -> Sequence[Button]:
+		return [btn for btn in self.renderer.buttons if btn.group is self.group]
+
+	def handle_event(self, event: Event):
+		if event.type == pg.MOUSEBUTTONDOWN:
+			if self.rect.collidepoint(event.pos):
+				if self.type == Button.Type.TOGGLE:
+					self.enabled = not self.enabled
+				elif self.type == Button.Type.RADIO:
+					self.enable()
+				if self.callback is not None:
+					self.callback()
 
 
 class InputBox:
