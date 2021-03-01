@@ -15,6 +15,7 @@ from grid import (
 	Grid,
 	GridBase,
 )
+from keys import mode_keys
 from rendering import (
 	Colors,
 	Rendering,
@@ -102,8 +103,21 @@ class Renderer:
 			grids.reverse()
 		return grids[1].cells[grids[0].get_coordinates(source)]
 
-	def set_mode(self, name: str):
-		self.get_button(name).enable()
+	def set_mode(
+			self,
+			name: Optional[str] = None,
+			index: Optional[int] = None,
+			key: Optional[int] = None,
+	):
+		button = None
+		if name is not None:
+			button = self.get_button(name)
+		elif key is not None:
+			index = mode_keys.index(key)
+		if index is not None:
+			button = self.get_buttons('mode')[index]
+		if button is not None:
+			button.enable()
 
 	def set_view(self, s: str = ''):
 		if s == '':

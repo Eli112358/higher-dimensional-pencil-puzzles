@@ -92,7 +92,7 @@ class Game:
 				elif event.key == K_DELETE:
 					self.clear_cells()
 				elif event.key in mode_keys:
-					self.renderer.set_mode(self.renderer.modes[mode_keys.index(event.key)])
+					self.renderer.set_mode(key=event.key)
 			for btn in self.renderer.buttons:
 				btn.handle_event(event)
 			for box in self.renderer.input_boxes:
