@@ -12,7 +12,6 @@ from pygame import (
 
 from grid import (
 	Cell,
-	CellBase,
 	Grid,
 	GridBase,
 )
@@ -24,6 +23,8 @@ from rendering import (
 from rendering.graphics import ModeButton
 from ui.elements import Button, InputBox
 from ui.grid import CellRenderer, GridRenderer
+
+CellType = Union[Cell, CellRenderer]
 
 
 class Renderer:
@@ -91,7 +92,7 @@ class Renderer:
 	def get_buttons(self, group: str) -> Sequence[Button]:
 		return self.__buttons(f'btn.group == "{group}"')
 
-	def get_cell(self, source: CellBase) -> CellBase:
+	def get_cell(self, source: CellType) -> CellType:
 		grids = [self.view, self.plane]
 		if isinstance(source, CellRenderer):
 			grids.reverse()
