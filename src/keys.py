@@ -19,7 +19,18 @@ from pygame.constants import (
 	K_KP7,
 	K_KP8,
 	K_KP9,
+	K_c,
+	K_v,
+	K_x,
+	K_z,
 )
+
+mode_keys = [
+	K_z,
+	K_x,
+	K_c,
+	K_v,
+]
 
 number_keys = [
 	K_0,

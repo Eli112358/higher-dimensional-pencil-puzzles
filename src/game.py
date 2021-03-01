@@ -17,7 +17,7 @@ from pygame.key import get_mods as get_mod_keys
 from pygame.mouse import get_pos as get_mouse_pos
 
 from grid import Grid, Regioning
-from keys import number_keys
+from keys import mode_keys, number_keys
 from rendering import (
 	Colors,
 	Rendering,
@@ -91,6 +91,8 @@ class Game:
 					self.enter_digit(event)
 				elif event.key == K_DELETE:
 					self.clear_cells()
+				elif event.key in mode_keys:
+					self.renderer.set_mode(self.renderer.modes[mode_keys.index(event.key)])
 			for btn in self.renderer.buttons:
 				btn.handle_event(event)
 			for box in self.renderer.input_boxes:
