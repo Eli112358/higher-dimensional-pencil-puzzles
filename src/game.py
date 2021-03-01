@@ -54,17 +54,17 @@ class Game:
 		coord = formula(pos, size, topleft, lambda p, s, f: (p - f) // s)
 		if not (ctrl_held or shift_held) and self.mouse_edge:
 			self.renderer.plane.clear(GridRenderer.Clearable.SELECTIONS)
-		try:
-			cell = self.renderer.plane.cells[coord]
-			if not cell.interacted:
-				if ctrl_held:
-					cell.selected = not cell.selected
-				else:
-					cell.selected = True
-				cell.interacted = True
-			self.mouse_edge = False
-		except IndexError:
-			pass
+		max_index = self.renderer.plane.size
+		if not all([0 <= coord[0] < max_index, 0 <= coord[1] < max_index]):
+			return
+		cell = self.renderer.plane.cells[coord]
+		if not cell.interacted:
+			if ctrl_held:
+				cell.selected = not cell.selected
+			else:
+				cell.selected = True
+			cell.interacted = True
+		self.mouse_edge = False
 
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
