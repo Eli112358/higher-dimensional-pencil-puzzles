@@ -130,8 +130,9 @@ class Renderer:
 		self.resize(self.size)
 
 	def resize(self, new_size: Size):
+		self.size = new_size
 		if not self.loaded:
-			self.screen = display.set_mode(size=new_size, flags=RESIZABLE)
+			self.screen = display.set_mode(size=self.size, flags=RESIZABLE)
 			self.loaded = True
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, self.plane.rect)
