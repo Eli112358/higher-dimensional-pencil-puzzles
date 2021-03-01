@@ -109,7 +109,7 @@ def main():
 	init_game()
 	regioning = Regioning(False, size=(2, 2))
 	screen_size = (500, 500)
-	rendering = Rendering('monospaced', 50, 3)
+	rendering = Rendering(50, 'monospaced', 3)
 	grid = Grid(3, regioning)
 	game = Game(grid, screen_size, rendering)
 	while game.mainloop():

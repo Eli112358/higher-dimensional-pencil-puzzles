@@ -24,8 +24,8 @@ class Rendering:
 
 	def __init__(
 			self,
-			font: str,
 			cell_size: int,
+			font: str,
 			width: int,
 	):
 		self.cell_size = cell_size
