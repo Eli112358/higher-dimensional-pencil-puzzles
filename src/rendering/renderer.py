@@ -4,10 +4,10 @@ from typing import (
 )
 
 from pygame import (
+	RESIZABLE,
 	Rect,
 	display,
 )
-from pygame.constants import RESIZABLE
 
 from grid import (
 	Grid,
