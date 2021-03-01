@@ -42,9 +42,8 @@ class Game:
 		self.mouse_edge = False
 
 	def clear_cells(self):
-		selected = self.renderer.get_selected()
-		for cell in selected:
-			cell.set_guess('')
+		for cell in self.renderer.selected:
+			cell.clear()
 
 	def select_cell(self):
 		pos = get_mouse_pos()
@@ -69,9 +68,8 @@ class Game:
 
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
-		selected = self.renderer.get_selected()
 		mode = self.renderer.mode
-		for cell in selected:
+		for cell in self.renderer.selected:
 			cell.toggle(digit, mode)
 
 	def mainloop(self) -> bool:

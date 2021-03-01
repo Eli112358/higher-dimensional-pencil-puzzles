@@ -58,6 +58,10 @@ class Renderer:
 	def modes(self) -> Sequence[str]:
 		return [btn.name for btn in self.get_buttons('mode')]
 
+	@property
+	def selected(self) -> Sequence[Cell]:
+		return [self.get_cell(cell[()]) for cell in self.plane.iterator() if cell[()].selected]
+
 	def __buttons(self, condition: Optional[str] = 'True') -> Sequence[Button]:
 		return [btn for btn in self.buttons if eval(condition)]
 
@@ -97,9 +101,6 @@ class Renderer:
 		if isinstance(source, CellRenderer):
 			grids.reverse()
 		return grids[1].cells[grids[0].get_coordinates(source)]
-
-	def get_selected(self):
-		return [self.get_cell(cell[()]) for cell in self.plane.iterator() if cell[()].selected]
 
 	def set_mode(self, name: str):
 		self.get_button(name).enable()
