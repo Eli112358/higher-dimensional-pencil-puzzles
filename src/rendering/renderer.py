@@ -53,11 +53,11 @@ class Renderer:
 
 	@property
 	def mode(self) -> str:
-		return [btn.name for btn in self.get_buttons('mode') if btn.enabled][0]
+		return self.__modes('btn.name', 'btn.enabled')[0]
 
 	@property
 	def modes(self) -> Sequence[str]:
-		return [btn.name for btn in self.get_buttons('mode')]
+		return self.__modes('btn.name')
 
 	@property
 	def selected(self) -> Sequence[Cell]:
@@ -90,6 +90,9 @@ class Renderer:
 			btn = Button(self, names[i].name, rect[i], icons[i](font, Colors.BLACK), btn_type=radio, group='mode')
 			self.buttons.append(btn)
 		self.get_buttons('mode')[0].enabled = True
+
+	def __modes(self, value: str = 'btn', condition: str = 'True') -> Sequence:
+		return [eval(value) for btn in self.get_buttons('mode') if eval(condition)]
 
 	def get_button(self, name: str) -> Button:
 		return self.__buttons(f'btn.name == "{name}"')[0]
