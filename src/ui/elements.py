@@ -108,10 +108,6 @@ class InputBox:
 	def color(self):
 		return Colors.SELECTED if self.active else Colors.WHITE
 
-	@property
-	def font(self) -> str:
-		return self.renderer.rendering.font
-
 	def draw(self, screen: Surface, font: str):
 		txt_surface = render_text(font, self.text, 50, Colors.BLACK)
 		self.rect.w = max(200, txt_surface.get_width() + 10)

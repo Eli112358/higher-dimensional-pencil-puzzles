@@ -107,10 +107,6 @@ class Cell(CellBase):
 		self.value = value
 		self.given = value != ''
 
-	def set_guess(self, value: int):
-		if not self.given:
-			self.value = value
-
 	def is_set(self, digit: int, field: Field) -> bool:
 		_field = self.candidates if field == Cell.Field.CANDIDATE else self.contingencies
 		return _field & (1 << digit) > 0
