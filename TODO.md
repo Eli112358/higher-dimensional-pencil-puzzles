@@ -17,12 +17,12 @@
             - [x] Between cells
             - [ ] Between boxes (aka regions)
       - [ ] Modes
-         - [ ] Digit
-         - [ ] Corner
-         - [ ] Center
+         - [x] Digit
+         - [x] Corner
+         - [x] Center
          - [ ] Color
       - [ ] Navigation
-         - [ ] Enter coordinates
+         - [x] Enter coordinates
          - [ ] Rotate around
             - [ ] Row
             - [ ] Column

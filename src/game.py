@@ -70,8 +70,9 @@ class Game:
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
 		selected = self.renderer.get_selected()
+		mode = self.renderer.mode
 		for cell in selected:
-			cell.set_guess(digit)
+			cell.toggle(digit, mode)
 
 	def mainloop(self) -> bool:
 		for event in events.get():

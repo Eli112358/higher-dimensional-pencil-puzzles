@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from enum import auto
 from typing import (
+	Optional,
+	Sequence,
 	TYPE_CHECKING,
 	Tuple,
 )
@@ -17,7 +19,11 @@ from rendering import (
 	Colors,
 	Size,
 )
-from rendering.graphics import render_text
+from rendering.graphics import (
+	blit_center,
+	center,
+	render_text,
+)
 from src.grid import (
 	Cell,
 	CellBase,
@@ -30,10 +36,45 @@ if TYPE_CHECKING:
 
 
 class PencilMarks:
+	formulae = [
+		('m', 'm'),
+		('d.w-m-s.w', 'm'),
+		('m', 'd.h-m-s.h'),
+		('d.w-m-s.w', 'd.h-m-s.h'),
+		('c.x', 'm'),
+		('c.x', 'd.h-m-s.h'),
+		('m', 'c.y'),
+		('d.w-m-s.w', 'c.y'),
+		('c.x-m', 'c.y'),
+		('c.x+m', 'c.y'),
+	]
 
 	def __init__(self, size: Size):
 		self.center = Surface(size, flags=SRCALPHA)
 		self.corner = Surface(size, flags=SRCALPHA)
+
+	def corner_coordinates(self, texts: Sequence[Surface], margin: Optional[int] = 5) -> Sequence[Rect]:
+		coordinates = []
+		m = margin
+		d = self.corner.get_rect()  # d for destination
+		for i, t in enumerate(texts):
+			c = center(t, self.corner)
+			s = t.get_rect()  # s for source
+			formula = PencilMarks.formulae[i]
+			coord = [eval(f, loc) for loc in (locals(),) for f in formula]
+			coordinates.append(Rect(*coord, 0, 0))
+		return coordinates
+
+	def render(self, cell: CellRenderer):
+		digits_corner = cell.cell.convert(Cell.Field.CONTINGENCY)
+		digits_center = cell.cell.convert(Cell.Field.CANDIDATE)
+		texts_corner = [render_text(cell.font, str(n), 20, cell.color) for n in digits_corner]
+		text_center = render_text(cell.font, ''.join(str(n) for n in digits_center), 25, cell.color)
+		coord_corner = self.corner_coordinates(texts_corner)
+		self.center.fill(Colors.EMPTY)
+		self.corner.fill(Colors.EMPTY)
+		blit_center(text_center, self.center)
+		self.corner.blits(list(zip(texts_corner, coord_corner)), False)
 
 
 class CellRenderer(CellBase):
@@ -77,14 +118,18 @@ class CellRenderer(CellBase):
 		return self.rendering.size()
 
 	def render(self):
-		text = render_text(self.font, str(self.cell.value), 50, self.color)
+		self.pencil_marks.render(self)
+		self.background.fill(Colors.EMPTY)
 		self.value.fill(Colors.EMPTY)
-		self.value.blit(text, (0, 0))
-		self.background.fill(Colors.WHITE)
-		surfs = [
-			self.border,
-			self.value,
-		]
+		blit_center(render_text(self.font, str(self.cell.value), 50, self.color), self.value)
+		surfs = [self.border]
+		if self.cell.value == '':
+			if self.cell.candidates > 0:
+				surfs.append(self.pencil_marks.center)
+			if self.cell.contingencies > 0:
+				surfs.append(self.pencil_marks.corner)
+		else:
+			surfs.append(self.value)
 		if self.selected:
 			surfs.append(self.selection)
 		for s in surfs:

@@ -4,6 +4,7 @@ from enum import auto
 from typing import (
 	Iterable,
 	Optional,
+	Sequence,
 	TYPE_CHECKING,
 	Tuple,
 	Union,
@@ -15,6 +16,7 @@ from numpy import (
 	nditer,
 )
 
+from keys import number_keys
 from util.enums import AutoName
 from util.tuple import formula
 
@@ -108,16 +110,24 @@ class Cell(CellBase):
 		if not self.given:
 			self.value = value
 
-	def is_set(self, digit: int, field: Field):
+	def is_set(self, digit: int, field: Field) -> bool:
 		_field = self.candidates if field == Cell.Field.CANDIDATE else self.contingencies
-		return _field & (1 << digit)
+		return _field & (1 << digit) > 0
+
+	def convert(self, field: Field) -> Sequence[int]:
+		return [n for n in range(len(number_keys)//2) if self.is_set(n, field)]
 
 	def set(self, digit: int, field: Field):
 		bit = 1 << digit
-		if field == Cell.Field.CANDIDATE:
-			self.candidates &= bit
+		if field == Cell.Field.GUESS:
+			if not self.given:
+				self.value = digit
+		elif field == Cell.Field.CANDIDATE:
+			self.candidates |= bit
 		elif field == Cell.Field.CONTINGENCY:
-			self.contingencies &= bit
+			self.contingencies |= bit
+		elif field == Cell.Field.COLOR:
+			pass
 		else:
 			raise Cell.Field.error('field')
 
@@ -127,10 +137,15 @@ class Cell(CellBase):
 
 	def toggle(self, digit: int, field: Field):
 		bit = 1 << digit
-		if field == Cell.Field.CANDIDATE:
+		if field == Cell.Field.GUESS:
+			if not self.given:
+				self.value = '' if self.value == digit else digit
+		elif field == Cell.Field.CANDIDATE:
 			self.candidates ^= bit
 		elif field == Cell.Field.CONTINGENCY:
 			self.contingencies ^= bit
+		elif field == Cell.Field.COLOR:
+			pass
 		else:
 			raise Cell.Field.error('field')
 
