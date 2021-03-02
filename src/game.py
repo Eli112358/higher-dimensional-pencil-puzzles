@@ -16,15 +16,15 @@ from pygame.event import Event
 from pygame.key import get_mods as get_mod_keys
 from pygame.mouse import get_pos as get_mouse_pos
 
-from grid import Grid, Regioning
+from grid import Regioning
+from grid.render import GridRenderer
+from grid.sudoku import SudokuGrid
 from keys import mode_keys, number_keys
 from rendering import (
-	Colors,
 	Rendering,
 	Size,
 )
 from rendering.renderer import Renderer
-from ui.grid import GridRenderer
 from util.tuple import formula
 
 
@@ -32,7 +32,7 @@ class Game:
 
 	def __init__(
 			self,
-			grid: Grid,
+			grid: SudokuGrid,
 			screen_size: Union[Size, Sequence[int], None],
 			rendering: Rendering,
 	):
@@ -110,7 +110,7 @@ def main():
 	regioning = Regioning(False, size=(2, 2))
 	screen_size = (500, 500)
 	rendering = Rendering(50, 'monospaced', 3)
-	grid = Grid(3, regioning)
+	grid = SudokuGrid(3, regioning)
 	game = Game(grid, screen_size, rendering)
 	while game.mainloop():
 		pass

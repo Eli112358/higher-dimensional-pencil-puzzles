@@ -11,10 +11,10 @@ from pygame import (
 )
 
 from grid import (
-	Cell,
 	Grid,
-	GridBase,
 )
+from grid.render import CellRenderer, GridRenderer
+from grid.sudoku import SudokuCell, SudokuGrid
 from keys import mode_keys
 from rendering import (
 	Colors,
@@ -23,16 +23,15 @@ from rendering import (
 )
 from rendering.graphics import ModeButton
 from ui.elements import Button, InputBox
-from ui.grid import CellRenderer, GridRenderer
 
-CellType = Union[Cell, CellRenderer]
+CellType = Union[SudokuCell, CellRenderer]
 
 
 class Renderer:
 
 	def __init__(
 			self,
-			grid: Grid,
+			grid: SudokuGrid,
 			screen_size: Union[Size, Sequence[int], None],
 			rendering: Rendering,
 	):
@@ -45,7 +44,7 @@ class Renderer:
 		self.screen = None
 		self.size = screen_size
 		self.plane = GridRenderer(self, (20, 20), self.grid.size)
-		self.view = GridBase(2, self.grid.size)
+		self.view = Grid(2, self.grid.size)
 		rect = Rect(50, self.plane.rect.bottom + 20, 200, 50)
 		self.input_boxes.append(InputBox(self, rect, self.set_view, False))
 		self.set_view()
@@ -60,7 +59,7 @@ class Renderer:
 		return self.__modes('btn.name')
 
 	@property
-	def selected(self) -> Sequence[Cell]:
+	def selected(self) -> Sequence[SudokuCell]:
 		return [self.get_cell(cell[()]) for cell in self.plane.iterator() if cell[()].selected]
 
 	def __buttons(self, condition: Optional[str] = 'True') -> Sequence[Button]:
@@ -73,10 +72,10 @@ class Renderer:
 			r.y += r.h + 5
 			rect.append(r)
 		names = [
-			Cell.Field.GUESS,
-			Cell.Field.CONTINGENCY,
-			Cell.Field.CANDIDATE,
-			Cell.Field.COLOR,
+			SudokuCell.Field.GUESS,
+			SudokuCell.Field.CONTINGENCY,
+			SudokuCell.Field.CANDIDATE,
+			SudokuCell.Field.COLOR,
 		]
 		icons = [
 			ModeButton.digit,

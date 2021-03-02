@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import auto
 from typing import (
+	ForwardRef,
 	Optional,
 	Sequence,
 	TYPE_CHECKING,
@@ -16,6 +17,8 @@ from pygame import (
 	draw as drawing,
 )
 
+from grid import Cell, Grid
+from grid.sudoku import SudokuCell
 from rendering import (
 	Colors,
 	Rendering,
@@ -25,11 +28,6 @@ from rendering.graphics import (
 	blit_center,
 	center,
 	render_text,
-)
-from src.grid import (
-	Cell,
-	CellBase,
-	GridBase,
 )
 from util.enums import AutoName
 
@@ -67,9 +65,9 @@ class PencilMarks:
 			coordinates.append(Rect(*coord, 0, 0))
 		return coordinates
 
-	def render(self, cell: CellRenderer):
-		digits_corner = cell.cell.convert(Cell.Field.CONTINGENCY)
-		digits_center = cell.cell.convert(Cell.Field.CANDIDATE)
+	def render(self, cell: ForwardRef('CellRenderer')):
+		digits_corner = cell.cell.convert(SudokuCell.Field.CONTINGENCY)
+		digits_center = cell.cell.convert(SudokuCell.Field.CANDIDATE)
 		texts_corner = [render_text(cell.font, str(n), 20, cell.color) for n in digits_corner]
 		text_center = render_text(cell.font, ''.join(str(n) for n in digits_center), 25, cell.color)
 		coord_corner = self.corner_coordinates(texts_corner)
@@ -79,9 +77,9 @@ class PencilMarks:
 		self.corner.blits(list(zip(texts_corner, coord_corner)), False)
 
 
-class CellRenderer(CellBase):
+class CellRenderer(Cell):
 
-	def __init__(self, grid: GridRenderer):
+	def __init__(self, grid: ForwardRef('GridRenderer')):
 		super().__init__(grid)
 		self.colors = [Colors.PENCIL, Colors.BLACK]
 		self.interacted = False
@@ -106,7 +104,7 @@ class CellRenderer(CellBase):
 		return self.renderer.rendering
 
 	@property
-	def cell(self) -> Cell:
+	def cell(self) -> SudokuCell:
 		return self.renderer.get_cell(self)
 
 	@property
@@ -140,7 +138,7 @@ class CellRenderer(CellBase):
 			self.background.blit(s, (0, 0))
 
 
-class GridRenderer(GridBase):
+class GridRenderer(Grid):
 	class Clearable(str, AutoName):
 		INTERACTIONS = auto()
 		SELECTIONS = auto()
