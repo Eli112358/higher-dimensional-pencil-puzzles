@@ -1,4 +1,5 @@
 from typing import (
+	Callable,
 	ForwardRef,
 	Iterable,
 	Optional,
@@ -53,8 +54,7 @@ class Grid:
 		self.cells = None
 		if cell_type is not None:
 			self.cells = empty([self.size] * self.dimensions, cell_type)
-			for cell in self.iterator(op_flags=['writeonly']):
-				cell[...] = cell_type(self)
+			self.populate(cell_type)
 
 	@property
 	def enumerator(self) -> ndenumerate:
@@ -72,3 +72,7 @@ class Grid:
 		if op_flags is None:
 			op_flags = ['readonly']
 		return nditer(self.cells, flags=flags, op_flags=op_flags)
+
+	def populate(self, cell_type: Callable):
+		for cell in self.iterator(op_flags=['writeonly']):
+			cell[...] = cell_type(self)
