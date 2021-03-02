@@ -1,4 +1,7 @@
-from typing import Sequence, Union
+from typing import (
+	Sequence,
+	Union,
+)
 
 from pygame import (
 	KEYDOWN,
@@ -19,7 +22,10 @@ from pygame.mouse import get_pos as get_mouse_pos
 from grid import Regioning
 from grid.render import GridRenderer
 from grid.sudoku import SudokuGrid
-from keys import mode_keys, number_keys
+from keys import (
+	mode_keys,
+	number_keys,
+)
 from rendering import (
 	Rendering,
 	Size,

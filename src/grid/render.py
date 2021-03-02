@@ -17,7 +17,10 @@ from pygame import (
 	draw as drawing,
 )
 
-from grid import Cell, Grid
+from grid import (
+	Cell,
+	Grid,
+)
 from grid.sudoku import SudokuCell
 from rendering import (
 	Colors,

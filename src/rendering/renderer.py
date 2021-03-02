@@ -10,11 +10,15 @@ from pygame import (
 	display,
 )
 
-from grid import (
-	Grid,
+from grid import Grid
+from grid.render import (
+	CellRenderer,
+	GridRenderer,
 )
-from grid.render import CellRenderer, GridRenderer
-from grid.sudoku import SudokuCell, SudokuGrid
+from grid.sudoku import (
+	SudokuCell,
+	SudokuGrid,
+)
 from keys import mode_keys
 from rendering import (
 	Colors,
@@ -22,7 +26,10 @@ from rendering import (
 	Size,
 )
 from rendering.graphics import ModeButton
-from ui.elements import Button, InputBox
+from ui.elements import (
+	Button,
+	InputBox,
+)
 
 CellType = Union[SudokuCell, CellRenderer]
 

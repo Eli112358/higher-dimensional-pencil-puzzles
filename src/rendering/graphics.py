@@ -1,5 +1,8 @@
 from enum import Enum
-from typing import Optional, Tuple
+from typing import (
+	Optional,
+	Tuple,
+)
 
 from pygame import (
 	Color,

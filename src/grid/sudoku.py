@@ -1,5 +1,8 @@
 from enum import auto
-from typing import Sequence, ForwardRef
+from typing import (
+	ForwardRef,
+	Sequence,
+)
 
 from grid import (
 	Cell,

@@ -23,7 +23,10 @@ from pygame import (
 from pygame.event import Event
 
 from rendering import Colors
-from rendering.graphics import blit_center, render_text
+from rendering.graphics import (
+	blit_center,
+	render_text,
+)
 from util.enums import AutoName
 
 if TYPE_CHECKING:
