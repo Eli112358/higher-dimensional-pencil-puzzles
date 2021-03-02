@@ -58,20 +58,26 @@ class Grid:
 	):
 		if flags is None:
 			flags = []
-		self.dimensions = dimensions
-		self.size = size
 		self.cells = cells
 		if any([
 			cell_type is not None,
 			INIT_EMPTY in flags,
 			POPULATE in flags,
 		]):
-			self.cells = empty([self.size] * self.dimensions, cell_type)
+			self.cells = empty([size] * dimensions, cell_type)
 			self.populate(cell_type)
+
+	@property
+	def dimensions(self) -> int:
+		return self.cells.ndim
 
 	@property
 	def enumerator(self) -> ndenumerate:
 		return ndenumerate(self.cells)
+
+	@property
+	def size(self) -> int:
+		return self.cells.shape[0]
 
 	def get_coordinates(self, target: Cell) -> Coordinates:
 		for coordinates, cell in self.enumerator:
