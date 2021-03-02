@@ -8,6 +8,7 @@ from typing import (
 
 from numpy import (
 	empty,
+	ndarray,
 	ndenumerate,
 	nditer,
 )
@@ -48,10 +49,11 @@ class Grid:
 			dimensions: int,
 			size: int,
 			cell_type: Optional[type] = None,
+			cells: Optional[ndarray] = None,
 	):
 		self.dimensions = dimensions
 		self.size = size
-		self.cells = None
+		self.cells = cells
 		if cell_type is not None:
 			self.cells = empty([self.size] * self.dimensions, cell_type)
 			self.populate(cell_type)
