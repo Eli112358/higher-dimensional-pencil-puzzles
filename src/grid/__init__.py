@@ -57,7 +57,7 @@ class Grid:
 				cell[...] = cell_type(self)
 
 	@property
-	def enumerator(self):
+	def enumerator(self) -> ndenumerate:
 		return ndenumerate(self.cells)
 
 	def get_coordinates(self, target: Cell) -> Coordinates:
