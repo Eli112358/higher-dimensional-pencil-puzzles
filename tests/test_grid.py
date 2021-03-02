@@ -4,17 +4,20 @@ import unittest
 
 import pygame as pg
 
-from grid import Cell, Grid, Regioning
-from rendering import Colors, Rendering
+from grid import (
+	Cell,
+	Regioning,
+)
+from grid.sudoku import SudokuGrid
+from rendering import Rendering
 
 
 class TestGrid(unittest.TestCase):
 	pg.init()
 	region_data = Regioning()
 	region_data._size = (2, 2)
-	font = pg.font.SysFont('monospaced', 15)
-	rendering = Rendering(50, font, 3)
-	grid = Grid(dimensions=3, regioning=region_data)
+	rendering = Rendering(50, 'monospaced', 3)
+	grid = SudokuGrid(dimensions=3, regioning=region_data)
 
 	def test_dimensions(self):
 		self.assertEqual(self.grid.dimensions, 3)
