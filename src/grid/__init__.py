@@ -52,7 +52,7 @@ class Grid:
 			self,
 			dimensions: int,
 			size: int,
-			cell_type: Optional[type] = None,
+			cell_type: Optional[Callable] = None,
 			cells: Optional[ndarray] = None,
 			flags: Flags = None,
 	):
