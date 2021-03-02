@@ -13,7 +13,7 @@ from numpy import (
 	nditer,
 )
 
-from grid.flags import (
+from grid.constants import (
 	INIT_EMPTY,
 	POPULATE,
 )
@@ -54,17 +54,17 @@ class Grid:
 			size: int,
 			cell_type: Optional[type] = None,
 			cells: Optional[ndarray] = None,
-			_flags: Flags = None,
+			flags: Flags = None,
 	):
-		if _flags is None:
-			_flags = []
+		if flags is None:
+			flags = []
 		self.dimensions = dimensions
 		self.size = size
 		self.cells = cells
 		if any([
 			cell_type is not None,
-			INIT_EMPTY in _flags,
-			POPULATE in _flags,
+			INIT_EMPTY in flags,
+			POPULATE in flags,
 		]):
 			self.cells = empty([self.size] * self.dimensions, cell_type)
 			self.populate(cell_type)
@@ -79,12 +79,12 @@ class Grid:
 				return coordinates
 		raise KeyError('target cell is not in grid')
 
-	def iterator(self, _flags: Flags = None, op_flags: Flags = None) -> nditer:
-		if _flags is None:
-			_flags = ['refs_ok']
+	def iterator(self, flags: Flags = None, op_flags: Flags = None) -> nditer:
+		if flags is None:
+			flags = ['refs_ok']
 		if op_flags is None:
 			op_flags = ['readonly']
-		return nditer(self.cells, flags=_flags, op_flags=op_flags)
+		return nditer(self.cells, flags=flags, op_flags=op_flags)
 
 	def populate(self, cell_type: Callable):
 		for cell in self.iterator(op_flags=['writeonly']):
