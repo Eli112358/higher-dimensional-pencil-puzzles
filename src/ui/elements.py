@@ -72,12 +72,16 @@ class Button(UIElement):
 		super().__init__(renderer, name, rect, callback)
 		self.enabled = False
 		self.graphic = graphic
-		self.group = group
+		self.group_name = group
 		self.type = btn_type
 
 	@property
 	def color(self) -> Color:
 		return Colors.SELECTED if self.enabled else Colors.WHITE
+
+	@property
+	def group(self) -> Sequence[Button]:
+		return [btn for btn in self.renderer.buttons if btn.group_name is self.group_name]
 
 	def draw(self, screen: Surface, _):
 		background = Surface(self.rect.size)
@@ -87,12 +91,9 @@ class Button(UIElement):
 		drawing.rect(screen, Colors.BLACK, self.rect, 3)
 
 	def enable(self):
-		for btn in self.get_group():
+		for btn in self.group:
 			btn.enabled = False
 		self.enabled = True
-
-	def get_group(self) -> Sequence[Button]:
-		return [btn for btn in self.renderer.buttons if btn.group is self.group]
 
 	def handle_event(self, event: Event):
 		if event.type == MOUSEBUTTONDOWN:

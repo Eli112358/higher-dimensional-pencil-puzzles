@@ -116,7 +116,7 @@ class Renderer:
 		return self.__buttons(f'btn.name == "{name}"')[0]
 
 	def get_buttons(self, group: str) -> Sequence[Button]:
-		return self.__buttons(f'btn.group == "{group}"')
+		return self.__buttons(f'btn.group_name == "{group}"')
 
 	def get_cell(self, source: CellType) -> CellType:
 		grids = [self.view, self.plane]
