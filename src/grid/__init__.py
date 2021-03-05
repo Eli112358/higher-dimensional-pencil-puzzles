@@ -37,7 +37,7 @@ class Regioning:
 		pass
 
 	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)):
-		return formula(self._size, scale, extra, lambda ss, s, e: (ss * s) + e)
+		return formula(lambda ss, s, e: (ss * s) + e, self._size, scale, extra)
 
 
 class Cell:

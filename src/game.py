@@ -57,7 +57,7 @@ class Game:
 		shift_held = get_mod_keys() & KMOD_SHIFT
 		size = self.renderer.rendering.size()
 		topleft = self.renderer.plane.rect.topleft
-		coord = formula(pos, size, topleft, lambda p, s, f: (p - f) // s)
+		coord = formula(lambda p, s, f: (p - f) // s, pos, size, topleft)
 		if not (ctrl_held or shift_held) and self.mouse_edge:
 			self.renderer.plane.clear(GridRenderer.Clearable.SELECTIONS)
 		max_index = self.renderer.plane.size

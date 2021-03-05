@@ -32,4 +32,4 @@ class Rendering:
 		self.width = width
 
 	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> Tuple[int, int]:
-		return formula(self.cell_size, scale, margin, lambda cs, s, m: (cs * s) + m)
+		return formula(lambda cs, s, m: (cs * s) + m, self.cell_size, scale, margin)
