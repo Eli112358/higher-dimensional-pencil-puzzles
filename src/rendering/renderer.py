@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from typing import (
 	Optional,
 	Sequence,
+	TYPE_CHECKING,
 	Union,
 )
 
@@ -31,6 +34,9 @@ from ui.elements import (
 )
 from util.tuple import formula
 
+if TYPE_CHECKING:
+	from game import Game
+
 CellType = Union[SudokuCell, CellRenderer]
 
 
@@ -38,11 +44,13 @@ class Renderer:
 
 	def __init__(
 			self,
+			game: Game,
 			grid: SudokuGrid,
 			rendering: Rendering,
 	):
 		self.buttons = []
 		self.coordinates = None
+		self.game = game
 		self.grid = grid
 		self.input_boxes = []
 		self.loaded = False

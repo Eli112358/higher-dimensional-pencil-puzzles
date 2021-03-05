@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from asyncio import new_event_loop
+from concurrent.futures.thread import ThreadPoolExecutor
 from enum import auto
 from typing import (
 	ForwardRef,
@@ -86,6 +88,7 @@ class CellRenderer(Cell):
 		super().__init__(grid)
 		self.colors = [Colors.PENCIL, Colors.BLACK]
 		self.interacted = False
+		self.ready = False
 		self.selected = False
 		self.background = Surface(self.size, flags=SRCALPHA)
 		self.border = Surface(self.size, flags=SRCALPHA)
@@ -123,8 +126,11 @@ class CellRenderer(Cell):
 		return self.rendering.size()
 
 	def render(self):
+		if not self.grid.renderer.game.running:
+			return
+		self.ready = False
 		self.pencil_marks.render(self)
-		self.background.fill(Colors.EMPTY)
+		self.background.fill(Colors.WHITE)
 		self.value.fill(Colors.EMPTY)
 		blit_center(render_text(self.font, str(self.cell.value), 50, self.color), self.value)
 		surfs = [self.border]
@@ -138,7 +144,10 @@ class CellRenderer(Cell):
 		if self.selected:
 			surfs.append(self.selection)
 		for s in surfs:
+			if not self.grid.renderer.game.running:
+				return
 			self.background.blit(s, (0, 0))
+		self.ready = True
 
 
 class GridRenderer(Grid):
@@ -158,6 +167,8 @@ class GridRenderer(Grid):
 	):
 		self.renderer = renderer
 		super().__init__(2, size, CellRenderer)
+		self.executor = ThreadPoolExecutor()
+		self.loop = new_event_loop()
 		margin = self.renderer.grid.regioning.size(extra=(1, 1))
 		size_calc = self.renderer.rendering.size(self.size, margin=margin)
 		self.surface = Surface(size_calc, flags=SRCALPHA)
@@ -175,8 +186,12 @@ class GridRenderer(Grid):
 
 	def render(self):
 		for cell in self.iterator():
-			cell[()].render()
+			if not self.renderer.game.running:
+				return
+			self.loop.run_in_executor(self.executor, cell[()].render)
 		size = self.renderer.rendering.size
-		surfs = [(cell.background, size(coord)) for coord, cell in self.enumerator]
-		self.surface.fill(Colors.WHITE)
-		self.surface.blits(surfs, doreturn=False)
+		for coord, cell in self.enumerator:
+			if not self.renderer.game.running:
+				return
+			if cell.ready:
+				self.surface.blit(cell.background, Rect(*size(coord), *cell.background.get_rect().size))

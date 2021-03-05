@@ -1,3 +1,5 @@
+from asyncio import run
+
 from pygame import (
 	KEYDOWN,
 	KMOD_CTRL,
@@ -8,10 +10,12 @@ from pygame import (
 	QUIT,
 	event as events,
 	init as init_game,
+	quit as quit_game,
 )
 from pygame.event import Event
 from pygame.key import get_mods as get_mod_keys
 from pygame.mouse import get_pos as get_mouse_pos
+from pygame.time import Clock
 
 from grid import Regioning
 from grid.render import GridRenderer
@@ -32,10 +36,13 @@ class Game:
 			grid: SudokuGrid,
 			rendering: Rendering,
 	):
+		self.clock = Clock()
+		self.fps = 30
 		self.grid = grid
-		self.renderer = Renderer(self.grid, rendering)
+		self.renderer = Renderer(self, self.grid, rendering)
 		self.mouse_down = False
 		self.mouse_edge = False
+		self.running = True
 
 	def clear_cells(self):
 		for cell in self.renderer.selected:
@@ -68,46 +75,49 @@ class Game:
 		for cell in self.renderer.selected:
 			cell.toggle(digit, mode)
 
-	def mainloop(self) -> bool:
-		for event in events.get():
-			if event.type == QUIT:
-				return False
-			if event.type == MOUSEBUTTONDOWN:
-				# rising edge
-				self.mouse_down = True
-				self.mouse_edge = True
-			if event.type == MOUSEBUTTONUP:
-				# falling edge
-				self.mouse_down = False
-				self.mouse_edge = True
-			if event.type == KEYDOWN:
-				if event.key in number_keys:
-					self.enter_digit(event)
-				elif event.key == K_DELETE:
-					self.clear_cells()
-				elif event.key in mode_keys:
-					self.renderer.set_mode(key=event.key)
-			for btn in self.renderer.buttons:
-				btn.handle_event(event)
-			for box in self.renderer.input_boxes:
-				box.handle_event(event)
+	def mainloop(self):
+		event = events.poll()
+		if event.type == QUIT:
+			self.running = False
+			return
+		if event.type == MOUSEBUTTONDOWN:
+			# rising edge
+			self.mouse_down = True
+			self.mouse_edge = True
+		if event.type == MOUSEBUTTONUP:
+			# falling edge
+			self.mouse_down = False
+			self.mouse_edge = True
+		if event.type == KEYDOWN:
+			if event.key in number_keys:
+				self.enter_digit(event)
+			elif event.key == K_DELETE:
+				self.clear_cells()
+			elif event.key in mode_keys:
+				self.renderer.set_mode(key=event.key)
+		for btn in self.renderer.buttons:
+			btn.handle_event(event)
+		for box in self.renderer.input_boxes:
+			box.handle_event(event)
 		if self.mouse_down:
 			self.select_cell()
 		if not self.mouse_down and self.mouse_edge:
 			self.renderer.plane.clear(GridRenderer.Clearable.INTERACTIONS)
-		self.renderer.tick()
-		return True
+		self.clock.tick()
+		if self.clock.get_fps() >= self.fps:
+			self.renderer.tick()
 
 
-def main():
+async def main():
 	init_game()
-	regioning = Regioning(False, size=(2, 2))
+	regioning = Regioning(False, size=(3, 3))
 	rendering = Rendering(50, 'monospaced', 3)
 	grid = SudokuGrid(3, regioning)
 	game = Game(grid, rendering)
-	while game.mainloop():
-		pass
+	while game.running:
+		game.mainloop()
+	quit_game()
 
 
 if __name__ == '__main__':
-	main()
+	run(main())
