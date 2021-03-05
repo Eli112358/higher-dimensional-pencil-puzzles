@@ -31,6 +31,7 @@ from rendering.graphics import ModeButton
 from ui.elements import (
 	Button,
 	InputBox,
+	UIElement,
 )
 from util.tuple import formula
 
@@ -60,9 +61,13 @@ class Renderer:
 		self.size = formula(lambda a, b, c: sum([a, b, c]), self.plane.rect.size, self.plane.rect.topleft, 100)
 		self.view = Grid(2, self.grid.size)
 		rect = Rect(50, self.plane.rect.bottom + 20, 200, 50)
-		self.input_boxes.append(InputBox(self, rect, self.set_view, False))
+		self.input_boxes.append(InputBox(self, 'coordinates', rect, self.set_view, False))
 		self.set_view()
 		self.__init_mode_buttons()
+
+	@property
+	def elements(self) -> Sequence[UIElement]:
+		return self.buttons + self.input_boxes
 
 	@property
 	def mode(self) -> str:
@@ -155,8 +160,6 @@ class Renderer:
 		self.plane.render()
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, self.plane.rect)
-		for btn in self.buttons:
-			btn.draw(self.screen)
-		for box in self.input_boxes:
-			box.draw(self.screen, self.rendering.font)
+		for element in self.elements:
+			element.draw(self.screen, self.rendering.font)
 		display.flip()

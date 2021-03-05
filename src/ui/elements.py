@@ -22,6 +22,7 @@ from pygame import (
 )
 from pygame.event import Event
 
+from event import EventHandler
 from rendering import Colors
 from rendering.graphics import (
 	blit_center,
@@ -33,7 +34,26 @@ if TYPE_CHECKING:
 	from rendering.renderer import Renderer
 
 
-class Button:
+class UIElement(EventHandler):
+
+	def __init__(
+			self,
+			renderer: Renderer,
+			name: str,
+			rect: Rect,
+			callback: Optional[Callable] = None,
+	):
+		super().__init__()
+		self.callback = callback
+		self.name = name
+		self.rect = rect
+		self.renderer = renderer
+
+	def draw(self, screen: Surface, font: str):
+		pass
+
+
+class Button(UIElement):
 	class Type(str, AutoName):
 		RADIO = auto()
 		SIMPLE = auto()
@@ -49,20 +69,17 @@ class Button:
 			btn_type: Optional[Type] = Type.SIMPLE,
 			group: Optional[str] = '',
 	):
-		self.callback = callback
+		super().__init__(renderer, name, rect, callback)
 		self.enabled = False
 		self.graphic = graphic
 		self.group = group
-		self.name = name
-		self.rect = rect
-		self.renderer = renderer
 		self.type = btn_type
 
 	@property
 	def color(self) -> Color:
 		return Colors.SELECTED if self.enabled else Colors.WHITE
 
-	def draw(self, screen: Surface):
+	def draw(self, screen: Surface, _):
 		background = Surface(self.rect.size)
 		background.fill(self.color)
 		blit_center(self.graphic, background)
@@ -88,21 +105,20 @@ class Button:
 					self.callback()
 
 
-class InputBox:
+class InputBox(UIElement):
 	# Derived from the object-oriented variant at https://stackoverflow.com/a/46390412/2640292
 
 	def __init__(
 			self,
 			renderer: Renderer,
+			name: str,
 			rect: Rect,
 			callback: Optional[Callable] = None,
 			reset: Optional[bool] = True,
 			text: Optional[str] = '',
 	):
+		super().__init__(renderer, name, rect, callback)
 		self.active = False
-		self.callback = callback
-		self.rect = rect
-		self.renderer = renderer
 		self.reset = reset
 		self.surface = Surface((self.rect.w, self.rect.h))
 		self.text = text
