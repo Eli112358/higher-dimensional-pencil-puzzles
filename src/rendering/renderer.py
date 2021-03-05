@@ -23,13 +23,13 @@ from keys import mode_keys
 from rendering import (
 	Colors,
 	Rendering,
-	Size,
 )
 from rendering.graphics import ModeButton
 from ui.elements import (
 	Button,
 	InputBox,
 )
+from util.tuple import formula
 
 CellType = Union[SudokuCell, CellRenderer]
 
@@ -39,7 +39,6 @@ class Renderer:
 	def __init__(
 			self,
 			grid: SudokuGrid,
-			screen_size: Union[Size, Sequence[int], None],
 			rendering: Rendering,
 	):
 		self.buttons = []
@@ -49,8 +48,8 @@ class Renderer:
 		self.loaded = False
 		self.rendering = rendering
 		self.screen = None
-		self.size = screen_size
 		self.plane = GridRenderer(self, (20, 20), self.grid.size)
+		self.size = formula(lambda a, b, c: sum([a, b, c]), self.plane.rect.size, self.plane.rect.topleft, 100)
 		self.view = Grid(2, self.grid.size)
 		rect = Rect(50, self.plane.rect.bottom + 20, 200, 50)
 		self.input_boxes.append(InputBox(self, rect, self.set_view, False))

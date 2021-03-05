@@ -1,8 +1,3 @@
-from typing import (
-	Sequence,
-	Union,
-)
-
 from pygame import (
 	KEYDOWN,
 	KMOD_CTRL,
@@ -26,10 +21,7 @@ from keys import (
 	mode_keys,
 	number_keys,
 )
-from rendering import (
-	Rendering,
-	Size,
-)
+from rendering import Rendering
 from rendering.renderer import Renderer
 from util.tuple import formula
 
@@ -39,11 +31,10 @@ class Game:
 	def __init__(
 			self,
 			grid: SudokuGrid,
-			screen_size: Union[Size, Sequence[int], None],
 			rendering: Rendering,
 	):
 		self.grid = grid
-		self.renderer = Renderer(self.grid, screen_size, rendering)
+		self.renderer = Renderer(self.grid, rendering)
 		self.mouse_down = False
 		self.mouse_edge = False
 
@@ -114,10 +105,9 @@ class Game:
 def main():
 	init_game()
 	regioning = Regioning(False, size=(2, 2))
-	screen_size = (500, 500)
 	rendering = Rendering(50, 'monospaced', 3)
 	grid = SudokuGrid(3, regioning)
-	game = Game(grid, screen_size, rendering)
+	game = Game(grid, rendering)
 	while game.mainloop():
 		pass
 
