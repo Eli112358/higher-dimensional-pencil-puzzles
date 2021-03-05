@@ -6,7 +6,6 @@ from pygame import (
 	MOUSEBUTTONDOWN,
 	MOUSEBUTTONUP,
 	QUIT,
-	VIDEORESIZE,
 	event as events,
 	init as init_game,
 )
@@ -73,8 +72,6 @@ class Game:
 		for event in events.get():
 			if event.type == QUIT:
 				return False
-			if event.type == VIDEORESIZE:
-				self.renderer.resize(event.size)
 			if event.type == MOUSEBUTTONDOWN:
 				# rising edge
 				self.mouse_down = True
