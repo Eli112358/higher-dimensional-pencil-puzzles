@@ -18,6 +18,10 @@ from pygame.event import Event
 from pygame.key import get_mods as get_mod_keys
 from pygame.time import Clock
 
+from event import (
+	EventHandler,
+	event_handler,
+)
 from grid import Regioning
 from grid.render import GridRenderer
 from grid.sudoku import SudokuGrid
@@ -30,7 +34,7 @@ from rendering.renderer import Renderer
 from util.tuple import formula
 
 
-class Mouse:
+class Mouse(EventHandler):
 
 	def __init__(
 			self,
@@ -55,13 +59,16 @@ class Mouse:
 	def up(self):
 		return not self.down
 
+	@event_handler(MOUSEBUTTONUP)
 	def fall(self, _=None):
 		self.down = False
 		self.edge = True
 
+	@event_handler(MOUSEMOTION)
 	def move(self, event: Event):
 		self.pos = event.pos
 
+	@event_handler(MOUSEBUTTONDOWN)
 	def rise(self, _=None):
 		self.down = True
 		self.edge = True
@@ -70,19 +77,29 @@ class Mouse:
 		self.edge = False
 
 
-class Game:
+class Game(EventHandler):
 
 	def __init__(
 			self,
 			grid: SudokuGrid,
 			rendering: Rendering,
 	):
+		super().__init__()
 		self.clock = Clock()
 		self.fps = 30
 		self.grid = grid
-		self.renderer = Renderer(self, self.grid, rendering)
 		self.mouse = Mouse()
+		self.renderer = Renderer(self, self.grid, rendering)
 		self.running = True
+
+	@event_handler(KEYDOWN)
+	def key_press(self, event: Event):
+		if event.key in number_keys:
+			self.enter_digit(event)
+		elif event.key == K_DELETE:
+			self.clear_cells()
+		elif event.key in mode_keys:
+			self.renderer.set_mode(key=event.key)
 
 	def clear_cells(self):
 		for cell in self.renderer.selected:
@@ -120,23 +137,10 @@ class Game:
 		if event.type == QUIT:
 			self.running = False
 			return
-		if event.type == MOUSEBUTTONDOWN:
-			self.mouse.rise()
-		if event.type == MOUSEBUTTONUP:
-			self.mouse.fall()
-		if event.type == MOUSEMOTION:
-			self.mouse.move(event)
-		if event.type == KEYDOWN:
-			if event.key in number_keys:
-				self.enter_digit(event)
-			elif event.key == K_DELETE:
-				self.clear_cells()
-			elif event.key in mode_keys:
-				self.renderer.set_mode(key=event.key)
-		for btn in self.renderer.buttons:
-			btn.handle_event(event)
-		for box in self.renderer.input_boxes:
-			box.handle_event(event)
+		self.handle(event)
+		self.mouse.handle(event)
+		for element in self.renderer.elements:
+			element.handle(event)
 		if self.mouse.down:
 			self.select_cell()
 		if self.mouse.falling:

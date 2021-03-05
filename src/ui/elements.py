@@ -22,7 +22,10 @@ from pygame import (
 )
 from pygame.event import Event
 
-from event import EventHandler
+from event import (
+	EventHandler,
+	event_handler,
+)
 from rendering import Colors
 from rendering.graphics import (
 	blit_center,
@@ -83,6 +86,17 @@ class Button(UIElement):
 	def group(self) -> Sequence[Button]:
 		return [btn for btn in self.renderer.buttons if btn.group_name is self.group_name]
 
+	@event_handler(MOUSEBUTTONDOWN)
+	def click(self, event: Event):
+		if not self.rect.collidepoint(event.pos):
+			return
+		if self.type == Button.Type.TOGGLE:
+			self.enabled = not self.enabled
+		elif self.type == Button.Type.RADIO:
+			self.enable()
+		if self.callback is not None:
+			self.callback()
+
 	def draw(self, screen: Surface, _):
 		background = Surface(self.rect.size)
 		background.fill(self.color)
@@ -94,16 +108,6 @@ class Button(UIElement):
 		for btn in self.group:
 			btn.enabled = False
 		self.enabled = True
-
-	def handle_event(self, event: Event):
-		if event.type == MOUSEBUTTONDOWN:
-			if self.rect.collidepoint(event.pos):
-				if self.type == Button.Type.TOGGLE:
-					self.enabled = not self.enabled
-				elif self.type == Button.Type.RADIO:
-					self.enable()
-				if self.callback is not None:
-					self.callback()
 
 
 class InputBox(UIElement):
@@ -128,6 +132,31 @@ class InputBox(UIElement):
 	def color(self):
 		return Colors.SELECTED if self.active else Colors.WHITE
 
+	@event_handler(MOUSEBUTTONDOWN)
+	def click(self, event: Event):
+		if self.rect.collidepoint(event.pos):
+			self.active = not self.active
+		else:
+			self.active = False
+			if self.callback is not None:
+				self.callback(self.text)
+
+	@event_handler(KEYDOWN)
+	def key_press(self, event: Event):
+		if not self.active:
+			return
+		if event.key in [K_RETURN, K_KP_ENTER]:
+			self.callback(self.text)
+			if self.reset:
+				self.text = ''
+			self.active = False
+		elif event.key == K_BACKSPACE:
+			self.text = self.text[:-1]
+		elif event.key == K_ESCAPE:
+			self.text = ''
+		else:
+			self.text += event.unicode
+
 	def draw(self, screen: Surface, font: str):
 		txt_surface = render_text(font, self.text, 50, Colors.BLACK)
 		self.rect.w = max(200, txt_surface.get_width() + 10)
@@ -136,25 +165,3 @@ class InputBox(UIElement):
 		background.blit(txt_surface, (5, 5))
 		screen.blit(background, self.rect.topleft)
 		drawing.rect(screen, Colors.BLACK, self.rect, 5)
-
-	def handle_event(self, event: Event):
-		if event.type == MOUSEBUTTONDOWN:
-			if self.rect.collidepoint(event.pos):
-				self.active = not self.active
-			else:
-				self.active = False
-				if self.callback is not None:
-					self.callback(self.text)
-		if event.type == KEYDOWN:
-			if self.active:
-				if event.key in [K_RETURN, K_KP_ENTER]:
-					self.callback(self.text)
-					if self.reset:
-						self.text = ''
-					self.active = False
-				elif event.key == K_BACKSPACE:
-					self.text = self.text[:-1]
-				elif event.key == K_ESCAPE:
-					self.text = ''
-				else:
-					self.text += event.unicode
