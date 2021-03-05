@@ -1,4 +1,5 @@
 from asyncio import run
+from typing import Tuple
 
 from pygame import (
 	KEYDOWN,
@@ -7,6 +8,7 @@ from pygame import (
 	K_DELETE,
 	MOUSEBUTTONDOWN,
 	MOUSEBUTTONUP,
+	MOUSEMOTION,
 	QUIT,
 	event as events,
 	init as init_game,
@@ -14,7 +16,6 @@ from pygame import (
 )
 from pygame.event import Event
 from pygame.key import get_mods as get_mod_keys
-from pygame.mouse import get_pos as get_mouse_pos
 from pygame.time import Clock
 
 from grid import Regioning
@@ -29,6 +30,46 @@ from rendering.renderer import Renderer
 from util.tuple import formula
 
 
+class Mouse:
+
+	def __init__(
+			self,
+			down: bool = False,
+			edge: bool = False,
+			pos: Tuple[int, int] = None,
+	):
+		super().__init__()
+		self.down = down
+		self.edge = edge
+		self.pos = pos
+
+	@property
+	def falling(self) -> bool:
+		return (not self.down) and self.edge
+
+	@property
+	def rising(self) -> bool:
+		return self.down and self.edge
+
+	@property
+	def up(self):
+		return not self.down
+
+	def fall(self, _=None):
+		self.down = False
+		self.edge = True
+
+	def move(self, event: Event):
+		self.pos = event.pos
+
+	def rise(self, _=None):
+		self.down = True
+		self.edge = True
+
+	def reset(self):
+		self.edge = False
+
+
 class Game:
 
 	def __init__(
@@ -40,8 +81,7 @@ class Game:
 		self.fps = 30
 		self.grid = grid
 		self.renderer = Renderer(self, self.grid, rendering)
-		self.mouse_down = False
-		self.mouse_edge = False
+		self.mouse = Mouse()
 		self.running = True
 
 	def clear_cells(self):
@@ -49,13 +89,13 @@ class Game:
 			cell.clear()
 
 	def select_cell(self):
-		pos = get_mouse_pos()
+		pos = self.mouse.pos
 		ctrl_held = get_mod_keys() & KMOD_CTRL
 		shift_held = get_mod_keys() & KMOD_SHIFT
 		size = self.renderer.rendering.size()
 		topleft = self.renderer.plane.rect.topleft
 		coord = formula(lambda p, s, f: (p - f) // s, pos, size, topleft)
-		if not (ctrl_held or shift_held) and self.mouse_edge:
+		if not (ctrl_held or shift_held) and self.mouse.edge:
 			self.renderer.plane.clear(GridRenderer.Clearable.SELECTIONS)
 		max_index = self.renderer.plane.size
 		if not all([0 <= coord[0] < max_index, 0 <= coord[1] < max_index]):
@@ -67,7 +107,7 @@ class Game:
 			else:
 				cell.selected = True
 			cell.interacted = True
-		self.mouse_edge = False
+		self.mouse.reset()
 
 	def enter_digit(self, event: Event):
 		digit = number_keys.index(event.key) % 10
@@ -81,13 +121,11 @@ class Game:
 			self.running = False
 			return
 		if event.type == MOUSEBUTTONDOWN:
-			# rising edge
-			self.mouse_down = True
-			self.mouse_edge = True
+			self.mouse.rise()
 		if event.type == MOUSEBUTTONUP:
-			# falling edge
-			self.mouse_down = False
-			self.mouse_edge = True
+			self.mouse.fall()
+		if event.type == MOUSEMOTION:
+			self.mouse.move(event)
 		if event.type == KEYDOWN:
 			if event.key in number_keys:
 				self.enter_digit(event)
@@ -99,9 +137,9 @@ class Game:
 			btn.handle_event(event)
 		for box in self.renderer.input_boxes:
 			box.handle_event(event)
-		if self.mouse_down:
+		if self.mouse.down:
 			self.select_cell()
-		if not self.mouse_down and self.mouse_edge:
+		if self.mouse.falling:
 			self.renderer.plane.clear(GridRenderer.Clearable.INTERACTIONS)
 		self.clock.tick()
 		if self.clock.get_fps() >= self.fps:
