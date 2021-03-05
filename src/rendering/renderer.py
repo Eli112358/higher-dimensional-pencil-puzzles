@@ -141,14 +141,10 @@ class Renderer:
 		self.view.cells = self.grid.cells.transpose(axes + mapped)[coord]
 
 	def tick(self):
-		self.plane.render()
-		self.resize(self.size)
-
-	def resize(self, new_size: Size):
-		self.size = new_size
 		if not self.loaded:
 			self.screen = display.set_mode(size=self.size, flags=RESIZABLE)
 			self.loaded = True
+		self.plane.render()
 		self.screen.fill(Colors.WHITE)
 		self.screen.blit(self.plane.surface, self.plane.rect)
 		for btn in self.buttons:
