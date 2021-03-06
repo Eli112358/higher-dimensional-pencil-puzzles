@@ -128,7 +128,7 @@ class CellRenderer(Cell):
 		return self.rendering.size()
 
 	def render(self):
-		if not self.grid.renderer.game.running:
+		if not self.renderer.game.running:
 			return
 		self.ready = False
 		self.pencil_marks.render(self)
@@ -146,7 +146,7 @@ class CellRenderer(Cell):
 		if self.selected:
 			surfs.append(self.selection)
 		for s in surfs:
-			if not self.grid.renderer.game.running:
+			if not self.renderer.game.running:
 				return
 			self.background.blit(s, (0, 0))
 		self.ready = True
