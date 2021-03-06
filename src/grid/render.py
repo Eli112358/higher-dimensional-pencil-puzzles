@@ -9,6 +9,7 @@ from typing import (
 	Sequence,
 	TYPE_CHECKING,
 	Tuple,
+	Union,
 )
 
 from pygame import (
@@ -22,6 +23,7 @@ from pygame import (
 from grid import (
 	Cell,
 	Grid,
+	Regioning,
 )
 from grid.sudoku import SudokuCell
 from rendering import (
@@ -163,10 +165,10 @@ class GridRenderer(Grid):
 			self,
 			renderer: Renderer,
 			top_left: Tuple[int, int],
-			size: int,
+			regioning: Union[int, Regioning],
 	):
 		self.renderer = renderer
-		super().__init__(2, size, CellRenderer)
+		super().__init__(2, regioning, CellRenderer)
 		self.executor = ThreadPoolExecutor()
 		self.loop = new_event_loop()
 		margin = self.renderer.grid.regioning.size(extra=(1, 1))

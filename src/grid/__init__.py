@@ -4,6 +4,7 @@ from typing import (
 	Iterable,
 	Optional,
 	Tuple,
+	Union,
 )
 
 from numpy import (
@@ -54,7 +55,7 @@ class Grid:
 	def __init__(
 			self,
 			dimensions: int,
-			size: int,
+			regioning: Union[int, Regioning],
 			cell_type: Optional[Callable] = None,
 			cells: Optional[ndarray] = None,
 			flags: Flags = None,
@@ -62,11 +63,15 @@ class Grid:
 		if flags is None:
 			flags = []
 		self.cells = cells
+		if type(regioning) is not int:
+			self.regioning = regioning
+			self.regioning.grid = self
 		if any([
 			cell_type is not None,
 			INIT_EMPTY in flags,
 			POPULATE in flags,
 		]):
+			size = regioning if type(regioning) is int else (shape := regioning.shape)[0] * shape[1]
 			self.cells = empty([size] * dimensions, cell_type)
 			self.populate(cell_type)
 

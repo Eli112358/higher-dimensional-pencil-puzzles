@@ -2,6 +2,7 @@ from enum import auto
 from typing import (
 	ForwardRef,
 	Sequence,
+	Union,
 )
 
 from grid import (
@@ -89,9 +90,7 @@ class SudokuGrid(Grid):
 
 	def __init__(
 			self,
-			dimensions: int = 2,
-			regioning: Regioning = Regioning(),
+			dimensions: int,
+			regioning: Union[int, Regioning],
 	):
-		self.regioning = regioning
-		size = self.regioning.size()[0] * self.regioning.size()[1]
-		super().__init__(dimensions, size, SudokuCell)
+		super().__init__(dimensions, regioning, SudokuCell)
