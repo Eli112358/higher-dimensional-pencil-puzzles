@@ -39,6 +39,7 @@
       <details>
       <summary>Click to expand!</summary>
      
+      - [ ] 0: Naked Singles
       - [ ] 1: Hidden Singles
       - [ ] 2: Naked Pairs/Triples
       - [ ] 3: Hidden Pairs/Triples
