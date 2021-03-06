@@ -26,18 +26,21 @@ Flags = Optional[Iterable[str]]
 
 class Regioning:
 
-	def __init__(self, regular: bool = True, size: Size = None):
+	def __init__(
+			self,
+			regular: bool = True,
+			shape: Tuple[int, int] = None,
+	):
+		self.grid = None
 		self.regular = regular
-		self._size = size
-		if self.regular:
-			self._size = (3, 3)
+		self.shape = shape
 
 	def load(self, file):
 		# implement later to support irregular sudoku
 		pass
 
-	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)):
-		return formula(lambda ss, s, e: (ss * s) + e, self._size, scale, extra)
+	def size(self, scale: Size = (1, 1), extra: Size = (0, 0)) -> Size:
+		return formula(lambda ss, s, e: (ss * s) + e, self.shape, scale, extra)
 
 
 class Cell:

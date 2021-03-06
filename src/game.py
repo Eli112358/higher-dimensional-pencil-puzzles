@@ -152,7 +152,7 @@ class Game(EventHandler):
 
 async def main():
 	init_game()
-	regioning = Regioning(False, size=(3, 3))
+	regioning = Regioning(False, (3, 3))
 	rendering = Rendering(50, 'monospaced', 3)
 	grid = SudokuGrid(3, regioning)
 	game = Game(grid, rendering)
