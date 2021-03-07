@@ -14,7 +14,7 @@ setup(
 		'numpy >=1.19.2',
 		'pygame >=2.0.0',
 	],
-	python_requires='3.0',
+	python_requires='3.9',
 	project_urls={
 		'repository': 'https://github.com/Eli112358/higher-dimensional-pencil-puzzles',
 		'web interface (planned)': 'http://eli112358.github.io/higher-dimensional-pencil-puzzles'

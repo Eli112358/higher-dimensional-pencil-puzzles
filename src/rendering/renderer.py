@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import (
 	Optional,
-	Sequence,
 	TYPE_CHECKING,
 	Union,
 )
@@ -66,7 +65,7 @@ class Renderer:
 		self.__init_mode_buttons()
 
 	@property
-	def elements(self) -> Sequence[UIElement]:
+	def elements(self) -> list[UIElement]:
 		return self.buttons + self.input_boxes
 
 	@property
@@ -74,14 +73,14 @@ class Renderer:
 		return self.__modes('btn.name', 'btn.enabled')[0]
 
 	@property
-	def modes(self) -> Sequence[str]:
+	def modes(self) -> list[str]:
 		return self.__modes('btn.name')
 
 	@property
-	def selected(self) -> Sequence[SudokuCell]:
+	def selected(self) -> list[SudokuCell]:
 		return [self.get_cell(cell[()]) for cell in self.plane.iterator() if cell[()].selected]
 
-	def __buttons(self, condition: Optional[str] = 'True') -> Sequence[Button]:
+	def __buttons(self, condition: Optional[str] = 'True') -> list[Button]:
 		return [btn for btn in self.buttons if eval(condition)]
 
 	def __init_mode_buttons(self):
@@ -109,13 +108,13 @@ class Renderer:
 			self.buttons.append(btn)
 		self.get_buttons('mode')[0].enabled = True
 
-	def __modes(self, value: str = 'btn', condition: str = 'True') -> Sequence:
+	def __modes(self, value: str = 'btn', condition: str = 'True') -> list:
 		return [eval(value) for btn in self.get_buttons('mode') if eval(condition)]
 
 	def get_button(self, name: str) -> Button:
 		return self.__buttons(f'btn.name == "{name}"')[0]
 
-	def get_buttons(self, group: str) -> Sequence[Button]:
+	def get_buttons(self, group: str) -> list[Button]:
 		return self.__buttons(f'btn.group_name == "{group}"')
 
 	def get_cell(self, source: CellType) -> CellType:

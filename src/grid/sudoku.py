@@ -1,7 +1,6 @@
 from enum import auto
 from typing import (
 	ForwardRef,
-	Sequence,
 	Union,
 )
 
@@ -42,7 +41,7 @@ class SudokuCell(Cell):
 		_field = self.candidates if field == SudokuCell.Field.CANDIDATE else self.contingencies
 		return _field & (1 << digit) > 0
 
-	def convert(self, field: Field) -> Sequence[int]:
+	def convert(self, field: Field) -> list[int]:
 		return [n for n in range(len(number_keys) // 2) if self.is_set(n, field)]
 
 	def clear(self):

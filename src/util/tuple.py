@@ -1,21 +1,17 @@
 from typing import (
 	Callable,
 	Union,
-	Tuple,
-	List,
-	AnyStr,
-	SupportsInt,
 )
 
 TupleAble = Union[
-	AnyStr,
-	List,
-	SupportsInt,
-	Tuple,
+	int,
+	list,
+	str,
+	tuple,
 ]
 
 
-def ensure(t: TupleAble) -> Tuple:
+def ensure(t: TupleAble) -> tuple:
 	if type(t) is int:
 		return t, t
 	if type(t) is str:
@@ -27,5 +23,5 @@ def ensure(t: TupleAble) -> Tuple:
 	return t
 
 
-def formula(f: Callable, *ts: TupleAble) -> Tuple:
+def formula(f: Callable, *ts: TupleAble) -> tuple:
 	return tuple(f(*a) for a in zip(*[ensure(t) for t in ts]))

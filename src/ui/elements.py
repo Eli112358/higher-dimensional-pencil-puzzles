@@ -4,7 +4,6 @@ from enum import auto
 from typing import (
 	Callable,
 	Optional,
-	Sequence,
 	TYPE_CHECKING,
 )
 
@@ -83,7 +82,7 @@ class Button(UIElement):
 		return Colors.SELECTED if self.enabled else Colors.WHITE
 
 	@property
-	def group(self) -> Sequence[Button]:
+	def group(self) -> list[Button]:
 		return [btn for btn in self.renderer.buttons if btn.group_name is self.group_name]
 
 	@event_handler(MOUSEBUTTONDOWN)

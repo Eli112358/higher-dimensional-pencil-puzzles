@@ -1,14 +1,11 @@
 from enum import Enum
-from typing import (
-	Tuple,
-	Union,
-)
+from typing import Union
 
 from pygame import Color
 
 from util.tuple import formula
 
-Size = Union[int, Tuple[int, int]]
+Size = Union[int, tuple[int, int]]
 
 
 class Colors(Color, Enum):
@@ -31,5 +28,5 @@ class Rendering:
 		self.font = font
 		self.width = width
 
-	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> Tuple[int, int]:
+	def size(self, scale: Size = (1, 1), margin: Size = (0, 0)) -> tuple[int, int]:
 		return formula(lambda cs, s, m: (cs * s) + m, self.cell_size, scale, margin)

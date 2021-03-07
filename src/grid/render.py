@@ -6,9 +6,7 @@ from enum import auto
 from typing import (
 	ForwardRef,
 	Optional,
-	Sequence,
 	TYPE_CHECKING,
-	Tuple,
 	Union,
 )
 
@@ -60,7 +58,7 @@ class PencilMarks:
 		self.center = Surface(size, flags=SRCALPHA)
 		self.corner = Surface(size, flags=SRCALPHA)
 
-	def corner_coordinates(self, texts: Sequence[Surface], margin: Optional[int] = 5) -> Sequence[Rect]:
+	def corner_coordinates(self, texts: list[Surface], margin: Optional[int] = 5) -> list[Rect]:
 		coordinates = []
 		m = margin
 		d = self.corner.get_rect()  # d for destination
@@ -124,7 +122,7 @@ class CellRenderer(Cell):
 		return self.rendering.font
 
 	@property
-	def size(self) -> Tuple[int, int]:
+	def size(self) -> tuple[int, int]:
 		return self.rendering.size()
 
 	def render(self):
@@ -164,7 +162,7 @@ class GridRenderer(Grid):
 	def __init__(
 			self,
 			renderer: Renderer,
-			top_left: Tuple[int, int],
+			top_left: tuple[int, int],
 			regioning: Union[int, Regioning],
 	):
 		self.renderer = renderer

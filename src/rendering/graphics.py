@@ -1,8 +1,5 @@
 from enum import Enum
-from typing import (
-	Optional,
-	Tuple,
-)
+from typing import Optional
 
 from pygame import (
 	Color,
@@ -49,7 +46,7 @@ class ModeButton:
 	@staticmethod
 	def __common(
 			color: Color,
-			texting: Optional[Tuple[str, str, int]] = None
+			texting: Optional[tuple[str, str, int]] = None
 	) -> Surface:
 		surf = new_surface()
 		if texting is not None:

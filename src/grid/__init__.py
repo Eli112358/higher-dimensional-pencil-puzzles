@@ -3,7 +3,6 @@ from typing import (
 	ForwardRef,
 	Iterable,
 	Optional,
-	Tuple,
 	Union,
 )
 
@@ -21,7 +20,7 @@ from grid.constants import (
 from rendering import Size
 from util.tuple import formula
 
-Coordinates = Tuple[int, ...]
+Coordinates = tuple[int, ...]
 Flags = Optional[Iterable[str]]
 
 
@@ -30,7 +29,7 @@ class Regioning:
 	def __init__(
 			self,
 			regular: bool = True,
-			shape: Tuple[int, int] = None,
+			shape: tuple[int, int] = None,
 	):
 		self.grid = None
 		self.regular = regular

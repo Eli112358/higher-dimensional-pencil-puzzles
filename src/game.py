@@ -1,5 +1,4 @@
 from asyncio import run
-from typing import Tuple
 
 from pygame import (
 	KEYDOWN,
@@ -40,7 +39,7 @@ class Mouse(EventHandler):
 			self,
 			down: bool = False,
 			edge: bool = False,
-			pos: Tuple[int, int] = None,
+			pos: tuple[int, int] = None,
 	):
 		super().__init__()
 		self.down = down
